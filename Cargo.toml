@@ -4,3 +4,4 @@ version = "0.1.0"
 authors = ["Andrew Plaza <aplaza@liquidthink.net>"]
 
 [dependencies]
+xcb = "0.7.6"
