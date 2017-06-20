@@ -5,3 +5,4 @@ authors = ["Andrew Plaza <aplaza@liquidthink.net>"]
 
 [dependencies]
 xcb = "0.7.6"
+
