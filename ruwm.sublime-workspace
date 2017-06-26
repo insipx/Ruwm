@@ -1,0 +1,682 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"target",
+				"target_branch"
+			],
+			[
+				"encodeURI",
+				"encodeURIComponent\t( uriComponent: string ): string Global"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/main.rs",
+			"settings":
+			{
+				"buffer_size": 113,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "extern crate xcb;\nuse std::process;\n\npub struct Ruwm {\n  connection: xcb::Connection,\n  screen_num: i32,\n}\n\nimpl Ruwm {\n  pub fn new() -> Option<Self> {\n    let (connection, screen_num) = xcb::Connection::connect(None).unwrap();\n\n    Some( Ruwm{\n      connection,\n      screen_num,\n    })\n  }\n\n  pub fn run(&self) {\n    let setup = self.connection.get_setup();\n    // get the screen whose number is screen_num\n\n    /*for x in setup.roots() {\n      unsafe {\n        println!(\"x: {:?}\", (*x.ptr).root);\n        println!(\"x: {:?}\", (*x.ptr).default_colormap);\n        println!(\"x: {:?}\", (*x.ptr).white_pixel);\n        println!(\"x: {:?}\", (*x.ptr).black_pixel);\n        println!(\"x: {:?}\", (*x.ptr).current_input_masks);\n        println!(\"x: {:?}\", (*x.ptr).width_in_pixels);\n        println!(\"x: {:?}\", (*x.ptr).height_in_pixels);\n        println!(\"x: {:?}\", (*x.ptr).width_in_millimeters);\n        println!(\"x: {:?}\", (*x.ptr).height_in_millimeters);\n        println!(\"x: {:?}\", (*x.ptr).min_installed_maps);\n        println!(\"x: {:?}\", (*x.ptr).max_installed_maps);\n        println!(\"x: {:?}\", (*x.ptr).root_visual);\n        println!(\"x: {:?}\", (*x.ptr).backing_stores);\n        println!(\"x: {:?}\", (*x.ptr).save_unders);\n        println!(\"x: {:?}\", (*x.ptr).root_depth);\n        println!(\"x: {:?}\", (*x.ptr).allowed_depths_len);\n      }\n    }*/\n\n    let screen = setup.roots().nth(self.screen_num as usize).unwrap();\n    let window = self.connection.generate_id();\n    let values = [\n      (xcb::CW_EVENT_MASK, xcb::EVENT_MASK_EXPOSURE | xcb:: EVENT_MASK_KEY_PRESS), \n    ];\n\n    xcb::create_window(&self.connection,\n      xcb::COPY_FROM_PARENT as u8,\n      window,\n      screen.root(),\n      0, 0,\n      150, 150,\n      10,\n      xcb::WINDOW_CLASS_INPUT_OUTPUT as u16,\n      screen.root_visual(),\n      &values\n    );\n    xcb::map_window(&self.connection, window);\n\n    loop {\n      let event = self.connection.poll_for_event();\n      match event {\n        Some(e) => {\n          let r = e.response_type();\n          match r {\n            xcb::KEY_PRESS => {\n              let key_press:&xcb::KeyPressEvent = xcb::cast_event(&e);\n              println!(\"Key '{}' pressed\", key_press.detail());\n            },\n            _ => { }\n          }\n          println!(\"Received some event: {}\", e.response_type());\n        },\n        None => { }\n      }\n    }\n  }\n}\n",
+			"file": "src/ruwm.rs",
+			"file_size": 2361,
+			"file_write_time": 131427105207529243,
+			"settings":
+			{
+				"buffer_size": 2361,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 124.0,
+		"last_filter": ":import",
+		"selected_items":
+		[
+			[
+				":import",
+				"Project Manager: Import *.sublime-project File"
+			],
+			[
+				":w",
+				":w - Save"
+			],
+			[
+				":remove",
+				"Package Control: Remove Package"
+			],
+			[
+				":rust",
+				"Set Syntax: Rust"
+			],
+			[
+				":syntax",
+				"Rust: Toggle Syntax Checking"
+			],
+			[
+				"javascript",
+				"Set Syntax: JavaScript Next"
+			],
+			[
+				":install",
+				"Package Control: Install Package"
+			],
+			[
+				"SublimeLinter",
+				"SublimeLinter: Choose Lint Mode"
+			],
+			[
+				"sublime",
+				"SublimeLinter: Choose Lint Mode"
+			],
+			[
+				":linter",
+				"SublimeLinter: Toggle Linter"
+			],
+			[
+				"SublimeLInter",
+				"SublimeLinter: Choose Gutter Theme"
+			],
+			[
+				":eslint",
+				"SublimeLinter: Choose Lint Mode"
+			],
+			[
+				":javascript",
+				"Set Syntax: JavaScript Next"
+			],
+			[
+				":install ",
+				"Package Control: Install Package"
+			],
+			[
+				":ruby",
+				"Set Syntax: Ruby"
+			],
+			[
+				"find",
+				"Find: In Project"
+			],
+			[
+				":Find ",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				":scss",
+				"Set Syntax: SCSS"
+			],
+			[
+				":sass",
+				"Set Syntax: Sass"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				":q",
+				"Set Syntax: SQL (Rails)"
+			],
+			[
+				":Rust",
+				"Build With: Rust - Run"
+			],
+			[
+				"Rust",
+				"Rust: Toggle Syntax Checking"
+			],
+			[
+				"Package Control: discover",
+				"Package Control: Discover Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			]
+		],
+		"width": 950.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/insi/Projects/ruwm",
+		"/home/insi/Projects/ruwm/src"
+	],
+	"file_history":
+	[
+		"/home/insi/Projects/ruwm/src/xcblib.rs",
+		"/home/insi/.config/sublime-text-3/Packages/RustAutoComplete/Preferences.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/User/RustAutoComplete.sublime-settings",
+		"/home/insi/Downloads/tinywm-1.3/annotated.c",
+		"/home/insi/Downloads/tinywm-1.3.tgz",
+		"/home/insi/Projects/ruwm/src/window_manager.rs",
+		"/home/insi/Projects/ruwm/Cargo.toml",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/src/utils/heroku-api.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/deploy",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/src/build.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/src/utils/sharkk-git.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/src/env-commands.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/sample-gulpfile.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/src/heroku-api.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/package.json",
+		"/home/insi/.config/sublime-text-3/Packages/User/ESLint.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/.eslintrc",
+		"/home/insi/.config/sublime-text-3/Packages/User/Babel.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/gulp/core/recipes/scripts/clean.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/gulp/core/recipes/scripts/local.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/gulp/core/recipes/scripts/staging.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/gulp/core/recipes/scripts/production.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/herokuapi.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/deploy.js",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy/upload_file.sh",
+		"/home/insi/.config/sublime-text-3/Packages/ESLint/ESLint.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/SublimeLinter/SublimeLinter.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/User/SublimeLinter.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/ESLint/Default (Linux).sublime-keymap",
+		"/home/insi/.config/sublime-text-3/Packages/Babel/Babel.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/deploy_angel.sh",
+		"/home/insi/Projects/sharkkdev/sharkk/rest/config/application.rb",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/angel/angel_list.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/menus/AngelUserSettingsController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/sass/main.scss",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/menus/AngelChangeNameController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/angel/menus/angel_user_settings.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/angel/menus/angel_change_name.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/menus/account/update_email.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/ProfileController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/profile.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk/UserService.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/angel/menus/angel_settings.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/right_menu.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/angel/menus/angel_user_list.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/menus/account/UpdateEmailController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/base.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/app.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/menus/RightMenuController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/fields/email.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/HeaderController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/SharkkKeyStore.jks",
+		"/home/insi/.config/sublime-text-3/Packages/FuzzyFileNav/Default (Linux).sublime-keymap",
+		"/home/insi/.config/sublime-text-3/Packages/FuzzyFileNav/fuzzy_file_nav.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/User/FileFinder.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/FileFinder/FileFinder.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/FileFinder/Default.sublime-keymap",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/AngelListController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/AngelAddController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/AngelIndexController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/base-template.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk/NotificationService.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/BaseController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/angular/services/SegueService.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/menus/AngelSettingsController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/angel/menus/AngelSettingsUserListController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/baby_sensor/babySensorIndexController.js",
+		"/home/insi/Projects/EveOnlineMarketFinder/src/market.rs",
+		"/home/insi/.config/sublime-text-3/Packages/User/HTMLBeautify.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/HTMLBeautify/HTMLBeautify.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk/angel/AngelService.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/left_menu.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/LoginController.js",
+		"/home/insi/.config/sublime-text-3/Packages/SassBeautify/SassBeautify.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/User/SassBeautify.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/css/main.css",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/platforms/android/assets/www/css/main.css",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/config/environment.development.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk/BaseSharkkAPIService.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/config/constants.js",
+		"/home/insi/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates/v2/fields/password.html",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2/RegisterController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/aboutController.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/www/bootstrap.js",
+		"/home/insi/Projects/sharkkdev/sharkk/cordova/package.json",
+		"/home/insi/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/insi/.config/sublime-text-3/Packages/Rust Enhanced/RustEnhanced.sublime-settings",
+		"/home/insi/Projects/EveOnlineMarketFinder/Cargo.toml",
+		"/home/insi/Projects/EveOnlineMarketFinder/Cargo.lock",
+		"/home/insi/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/insi/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap"
+	],
+	"find":
+	{
+		"height": 51.0
+	},
+	"find_in_files":
+	{
+		"height": 197.0,
+		"where_history":
+		[
+			"/home/insi/Projects/sharkkdev",
+			"<open files>,<open folders>",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www/lib/sharkk/ui",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www/templates",
+			"/home/insi/Projects/sharkkdev/sharkk/cordova/www/controllers/v2"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"win",
+			"conn",
+			"TAR_FILE",
+			"BUILD_SLUG",
+			"tarFile",
+			"this.TMP",
+			"TMP",
+			"BUILD_PATH",
+			"osTmpDir",
+			"TMP_DIR",
+			"require('path')",
+			"SNAP",
+			"snapshots",
+			"tarFile",
+			"replace",
+			"snapshots",
+			"this.put_url",
+			"get_url",
+			"Git",
+			"envParser",
+			"ArgParse",
+			"Git.cloen",
+			"Git.clone",
+			"throw",
+			"async",
+			"await",
+			"put_url",
+			"error",
+			"BUILD_PATH",
+			"BUILD_SLUG",
+			"put_url",
+			"error",
+			"e",
+			"initOra",
+			"console.log",
+			"end",
+			"console",
+			"no More Data",
+			"console.log",
+			"cb",
+			"create",
+			"resolve",
+			"reject",
+			"Ora",
+			"initOra",
+			"Ora",
+			"spinner",
+			"Ora",
+			"tar",
+			"ora",
+			"pull",
+			"ora",
+			"repoInstance",
+			"console.log",
+			"BUILD_PATH",
+			"NOdeGit",
+			"BUILD_SLUG",
+			"Git",
+			"BASE_GITHUB_URL",
+			"THIS",
+			"\"\n",
+			"this.auth",
+			"http",
+			"padding",
+			"question",
+			"class=\"question\"",
+			"label",
+			"fix-to-bottom",
+			"formData",
+			"FormData",
+			"UpdateEmailController",
+			"UpdateEmailController.js/",
+			"\tUpdateEmailController.js/\t",
+			"UpdateEmailController",
+			"UpdateEmailController.js",
+			"Update Email",
+			"button",
+			"row_save",
+			"button",
+			"text",
+			"input",
+			">",
+			"bottom",
+			"p {",
+			"SegueService",
+			"getSegueData",
+			"center",
+			"input_line",
+			"345",
+			"page_content",
+			"font-size",
+			"route",
+			"id",
+			"AngelService",
+			"$space",
+			"angel/list",
+			"UserService",
+			"submitController",
+			"$scope",
+			"defaultErrorHandler",
+			"rootScope",
+			"request_items",
+			"form_item_url",
+			"get_items"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/main.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 113,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19,
+								19
+							]
+						],
+						"settings":
+						{
+							"rust_syntax_checking": true,
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/ruwm.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2361,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1224,
+								1224
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 731.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 51.0
+	},
+	"input":
+	{
+		"height": 75.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 636.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Rust/Rust.sublime-build",
+	"project": "ruwm.sublime-project",
+	"replace":
+	{
+		"height": 98.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"application",
+				"rest/config/application.rb"
+			],
+			[
+				"angel_l",
+				"v2/angel/angel_list.html"
+			],
+			[
+				"angel",
+				"v2/angel/menus/angel_user_settings.html"
+			],
+			[
+				"change_name",
+				"v2/angel/menus/angel_change_name.html"
+			],
+			[
+				"angeluser",
+				"v2/angel/menus/AngelUserSettingsController.js"
+			],
+			[
+				"update_",
+				"v2/menus/account/update_email.html"
+			],
+			[
+				"angel_user_list",
+				"v2/angel/menus/angel_user_list.html"
+			],
+			[
+				"angel_user_settings",
+				"v2/angel/menus/angel_user_settings.html"
+			],
+			[
+				"changename",
+				"v2/angel/menus/AngelChangeNameController.js"
+			],
+			[
+				"use",
+				"sharkk/UserService.js"
+			],
+			[
+				"updateemail",
+				"v2/menus/account/UpdateEmailController.js"
+			],
+			[
+				"update_email",
+				"v2/menus/account/update_email.html"
+			],
+			[
+				"profile.html",
+				"v2/profile.html"
+			],
+			[
+				"profilecontroller",
+				"cordova/www/controllers/v2/ProfileController.js"
+			],
+			[
+				"profilecont",
+				"v2/ProfileController.js"
+			],
+			[
+				"right_menu",
+				"v2/right_menu.html"
+			],
+			[
+				"rightmenu",
+				"cordova/www/controllers/v2/menus/RightMenuController.js"
+			],
+			[
+				"profile",
+				"v2/ProfileController.js"
+			],
+			[
+				"base.ht",
+				"cordova/www/templates/v2/base.html"
+			],
+			[
+				"email.h",
+				"v2/fields/email.html"
+			],
+			[
+				"base.html",
+				"v2/base.html"
+			],
+			[
+				"app.j",
+				"cordova/www/app.js"
+			],
+			[
+				"updateemailcontroller",
+				"v2/menus/account/UpdateEmailController.js"
+			],
+			[
+				"market",
+				"src/market.rs"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 1000.0,
+		"last_filter": "rest",
+		"selected_items":
+		[
+			[
+				"rest",
+				"~/Projects/sharkkdev/rest.sublime-project"
+			],
+			[
+				"",
+				"~/Projects/sharkkdev/sharkk/deploy/sharkk_deploy.sublime-project"
+			],
+			[
+				"eve",
+				"~/Projects/EveOnlineMarketFinder/evemf.sublime-project"
+			],
+			[
+				"test",
+				"~/Projects/test_deployment/test.sublime-project"
+			]
+		],
+		"width": 760.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 548.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

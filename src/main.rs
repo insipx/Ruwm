@@ -4,6 +4,7 @@ use ruwm::Ruwm;
 mod ruwm;
 
 fn main() {
-    let ruwm = Ruwm::new().unwrap();
+    let dpy = ":1";
+    let ruwm = Ruwm::new(&dpy).unwrap();
     ruwm.run();
 }
