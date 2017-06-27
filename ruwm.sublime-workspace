@@ -25,13 +25,30 @@
 			}
 		},
 		{
-			"contents": "extern crate xcb;\nuse std::process;\n\npub struct Ruwm {\n  connection: xcb::Connection,\n  screen_num: i32,\n}\n\nimpl Ruwm {\n  pub fn new() -> Option<Self> {\n    let (connection, screen_num) = xcb::Connection::connect(None).unwrap();\n\n    Some( Ruwm{\n      connection,\n      screen_num,\n    })\n  }\n\n  pub fn run(&self) {\n    let setup = self.connection.get_setup();\n    // get the screen whose number is screen_num\n\n    /*for x in setup.roots() {\n      unsafe {\n        println!(\"x: {:?}\", (*x.ptr).root);\n        println!(\"x: {:?}\", (*x.ptr).default_colormap);\n        println!(\"x: {:?}\", (*x.ptr).white_pixel);\n        println!(\"x: {:?}\", (*x.ptr).black_pixel);\n        println!(\"x: {:?}\", (*x.ptr).current_input_masks);\n        println!(\"x: {:?}\", (*x.ptr).width_in_pixels);\n        println!(\"x: {:?}\", (*x.ptr).height_in_pixels);\n        println!(\"x: {:?}\", (*x.ptr).width_in_millimeters);\n        println!(\"x: {:?}\", (*x.ptr).height_in_millimeters);\n        println!(\"x: {:?}\", (*x.ptr).min_installed_maps);\n        println!(\"x: {:?}\", (*x.ptr).max_installed_maps);\n        println!(\"x: {:?}\", (*x.ptr).root_visual);\n        println!(\"x: {:?}\", (*x.ptr).backing_stores);\n        println!(\"x: {:?}\", (*x.ptr).save_unders);\n        println!(\"x: {:?}\", (*x.ptr).root_depth);\n        println!(\"x: {:?}\", (*x.ptr).allowed_depths_len);\n      }\n    }*/\n\n    let screen = setup.roots().nth(self.screen_num as usize).unwrap();\n    let window = self.connection.generate_id();\n    let values = [\n      (xcb::CW_EVENT_MASK, xcb::EVENT_MASK_EXPOSURE | xcb:: EVENT_MASK_KEY_PRESS), \n    ];\n\n    xcb::create_window(&self.connection,\n      xcb::COPY_FROM_PARENT as u8,\n      window,\n      screen.root(),\n      0, 0,\n      150, 150,\n      10,\n      xcb::WINDOW_CLASS_INPUT_OUTPUT as u16,\n      screen.root_visual(),\n      &values\n    );\n    xcb::map_window(&self.connection, window);\n\n    loop {\n      let event = self.connection.poll_for_event();\n      match event {\n        Some(e) => {\n          let r = e.response_type();\n          match r {\n            xcb::KEY_PRESS => {\n              let key_press:&xcb::KeyPressEvent = xcb::cast_event(&e);\n              println!(\"Key '{}' pressed\", key_press.detail());\n            },\n            _ => { }\n          }\n          println!(\"Received some event: {}\", e.response_type());\n        },\n        None => { }\n      }\n    }\n  }\n}\n",
 			"file": "src/ruwm.rs",
-			"file_size": 2361,
-			"file_write_time": 131427105207529243,
 			"settings":
 			{
-				"buffer_size": 2361,
+				"buffer_size": 3381,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/insi/Downloads/tinywm-xcb.c",
+			"settings":
+			{
+				"buffer_size": 3420,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\nextern crate xcb;\n\nuse std::thread;\nuse std::time::Duration;\n\n\nfn main() {\n  let rectangles: &[xcb::Rectangle] = &[\n      xcb::Rectangle::new(200, 200, 400, 400)\n  ];\n\n  let (conn, screen_num) = xcb::Connection::connect(None).unwrap();\n  let setup = conn.get_setup();\n  let screen = setup.roots().nth(screen_num as usize).unwrap();\n\n  let gc = conn.generate_id();\n  \n  xcb::create_gc(&conn, gc, screen.root(), &[\n      (xcb::GC_FUNCTION, xcb::GX_XOR),\n      (xcb::GC_FOREGROUND, screen.white_pixel()),\n      (xcb::GC_BACKGROUND, screen.black_pixel()),\n      (xcb::GC_LINE_WIDTH, 1),\n      (xcb::GC_LINE_STYLE, xcb::LINE_STYLE_ON_OFF_DASH),\n      (xcb::GC_GRAPHICS_EXPOSURES, 0)\n  ]);\n\n  //loop {\n    xcb::poly_rectangle(&conn, screen.root(), gc, &rectangles);\n    xcb::map_window(&conn, screen.root());\n    conn.flush();\n  //}\n  thread::sleep(Duration::from_secs(5));\n}",
+			"file": "/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
+			"file_size": 870,
+			"file_write_time": 131426305224378847,
+			"settings":
+			{
+				"buffer_size": 870,
 				"line_ending": "Unix"
 			}
 		}
@@ -43,17 +60,17 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 124.0,
-		"last_filter": ":import",
+		"height": 784.0,
+		"last_filter": ":w",
 		"selected_items":
 		[
 			[
-				":import",
-				"Project Manager: Import *.sublime-project File"
-			],
-			[
 				":w",
 				":w - Save"
+			],
+			[
+				":import",
+				"Project Manager: Import *.sublime-project File"
 			],
 			[
 				":remove",
@@ -293,6 +310,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"root",
+			"screen_num",
 			"win",
 			"conn",
 			"TAR_FILE",
@@ -430,8 +449,8 @@
 						"selection":
 						[
 							[
-								19,
-								19
+								83,
+								83
 							]
 						],
 						"settings":
@@ -445,7 +464,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -454,15 +473,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2361,
+						"buffer_size": 3381,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1224,
-								1224
+								2389,
+								2389
 							]
 						],
 						"settings":
@@ -472,10 +491,76 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 731.0,
+						"translation.y": 2050.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "/home/insi/Downloads/tinywm-xcb.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3420,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1330,
+								1330
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1419.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 870,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								584,
+								584
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -498,11 +583,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.684045881126,
 			1.0
 		],
 		"rows":
@@ -673,7 +765,7 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 548.0,
 	"status_bar_visible": true,
 	"template_settings":
