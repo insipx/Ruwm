@@ -1,4 +1,7 @@
 extern crate xcb;
+use std::process;
+use events::Events;
+
 pub struct Ruwm {
   width: u16,
   height: u16,
@@ -59,7 +62,6 @@ impl Ruwm {
     println!("Screen height: {}", self.height);
     println!("Screen width: {}", self.width);
 
-    let window = self.connection.generate_id();
     let events : u16 = 
       (xcb::CW_EVENT_MASK | xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS | xcb::EVENT_MASK_EXPOSURE) as u16;
 
@@ -79,24 +81,10 @@ impl Ruwm {
       match event {
         Some(e) => {
           match e.response_type() {
-            xcb::BUTTON_PRESS => {
-              let button_press : &xcb::ButtonPressEvent = xcb::cast_event(&e);
-              println!("Something Happened!, '{}' pressed", button_press.detail());
-            },
-            xcb::BUTTON_RELEASE => {
-
-            },
-            xcb::KEY_PRESS => {
-              let key_press : &xcb::KeyPressEvent = xcb::cast_event(&e);
-              println!("Key '{}' pressed", key_press.detail());
-              if key_press.detail() == 0x18 { //Q
-                break 'event_loop;
-              }
-            },
-            xcb::EXPOSE => {
-              let expose : &xcb::ExposeEvent = xcb::cast_event(&e);
-              println!("Received Expose Event, {}", expose.window());
-            },
+            xcb::BUTTON_PRESS => Events::button_press(e),
+            xcb::BUTTON_RELEASE => Events::button_release(e),
+            xcb::KEY_PRESS => Events::key_press(e),
+            xcb::EXPOSE => Events::expose(e),
             _ => { 
               println!("Received some event: {}", e.response_type());
             }

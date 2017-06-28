@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"height_",
+				"height_in_pixels"
+			],
+			[
 				"target",
 				"target_branch"
 			],
@@ -19,7 +23,7 @@
 			"file": "src/main.rs",
 			"settings":
 			{
-				"buffer_size": 113,
+				"buffer_size": 136,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -28,27 +32,37 @@
 			"file": "src/ruwm.rs",
 			"settings":
 			{
-				"buffer_size": 3381,
+				"buffer_size": 3231,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/home/insi/Downloads/tinywm-xcb.c",
+			"contents": "extern crate xcb;\nuse xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;\nstruct Utils;\n\nimpl Utils {\n  pub fn get_atoms<'a>(names: Vec<&str>, atoms: xcb_atom_t, c: &xcb::Connection) {\n    let cookies: <std::vec::Vec<xcb::Cookie<'a, xcb::ffi::xcb_intern_atom_cookie_t>> as Trait>::new();\n    for name in &names {\n      cookies.push(xcb::intern_atom(c, false, name));\n    }\n    names.iter().zip(cookies.iter()) {\n      let reply = \n    }\n  }  \n}",
+			"file": "src/utils.rs",
+			"file_size": 424,
+			"file_write_time": 131431489488633086,
 			"settings":
 			{
-				"buffer_size": 3420,
+				"buffer_size": 436,
+				"line_ending": "Unix",
+				"name": "extern crate xcb;"
+			}
+		},
+		{
+			"file": "src/events.rs",
+			"settings":
+			{
+				"buffer_size": 807,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\nextern crate xcb;\n\nuse std::thread;\nuse std::time::Duration;\n\n\nfn main() {\n  let rectangles: &[xcb::Rectangle] = &[\n      xcb::Rectangle::new(200, 200, 400, 400)\n  ];\n\n  let (conn, screen_num) = xcb::Connection::connect(None).unwrap();\n  let setup = conn.get_setup();\n  let screen = setup.roots().nth(screen_num as usize).unwrap();\n\n  let gc = conn.generate_id();\n  \n  xcb::create_gc(&conn, gc, screen.root(), &[\n      (xcb::GC_FUNCTION, xcb::GX_XOR),\n      (xcb::GC_FOREGROUND, screen.white_pixel()),\n      (xcb::GC_BACKGROUND, screen.black_pixel()),\n      (xcb::GC_LINE_WIDTH, 1),\n      (xcb::GC_LINE_STYLE, xcb::LINE_STYLE_ON_OFF_DASH),\n      (xcb::GC_GRAPHICS_EXPOSURES, 0)\n  ]);\n\n  //loop {\n    xcb::poly_rectangle(&conn, screen.root(), gc, &rectangles);\n    xcb::map_window(&conn, screen.root());\n    conn.flush();\n  //}\n  thread::sleep(Duration::from_secs(5));\n}",
-			"file": "/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
-			"file_size": 870,
-			"file_write_time": 131426305224378847,
+			"file": "/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
 			"settings":
 			{
-				"buffer_size": 870,
+				"buffer_size": 51129,
 				"line_ending": "Unix"
 			}
 		}
@@ -61,7 +75,7 @@
 	"command_palette":
 	{
 		"height": 784.0,
-		"last_filter": ":w",
+		"last_filter": "",
 		"selected_items":
 		[
 			[
@@ -190,6 +204,8 @@
 	],
 	"file_history":
 	[
+		"/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
+		"/home/insi/Downloads/tinywm-xcb.c",
 		"/home/insi/Projects/ruwm/src/xcblib.rs",
 		"/home/insi/.config/sublime-text-3/Packages/RustAutoComplete/Preferences.sublime-settings",
 		"/home/insi/.config/sublime-text-3/Packages/User/RustAutoComplete.sublime-settings",
@@ -290,7 +306,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 197.0,
+		"height": 211.0,
 		"where_history":
 		[
 			"/home/insi/Projects/sharkkdev",
@@ -310,6 +326,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"screen",
 			"root",
 			"screen_num",
 			"win",
@@ -433,7 +450,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -442,15 +459,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 113,
+						"buffer_size": 136,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								83,
-								83
+								66,
+								66
 							]
 						],
 						"settings":
@@ -464,7 +481,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -473,15 +490,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3381,
+						"buffer_size": 3231,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2389,
-								2389
+								2717,
+								2717
 							]
 						],
 						"settings":
@@ -491,63 +508,56 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2050.0,
+						"translation.y": 2184.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 4,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 2,
-					"file": "/home/insi/Downloads/tinywm-xcb.c",
+					"file": "src/utils.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3420,
+						"buffer_size": 436,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1330,
-								1330
+								382,
+								382
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"auto_name": "extern crate xcb;",
+							"syntax": "Packages/Rust/Rust.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1419.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
+					"file": "src/events.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 870,
+						"buffer_size": 807,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								584,
-								584
+								441,
+								441
 							]
 						],
 						"settings":
@@ -558,6 +568,42 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 4,
+					"file": "/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 51129,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9814,
+								9814
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 11610.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -594,7 +640,7 @@
 		"cols":
 		[
 			0.0,
-			0.684045881126,
+			0.5,
 			1.0
 		],
 		"rows":
