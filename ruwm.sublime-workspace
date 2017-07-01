@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"xcb",
+				"xcb_intern_atom_cookie_t"
+			],
+			[
 				"height_",
 				"height_in_pixels"
 			],
@@ -23,7 +27,7 @@
 			"file": "src/main.rs",
 			"settings":
 			{
-				"buffer_size": 136,
+				"buffer_size": 148,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -32,19 +36,17 @@
 			"file": "src/ruwm.rs",
 			"settings":
 			{
-				"buffer_size": 3231,
+				"buffer_size": 3574,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "extern crate xcb;\nuse xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;\nstruct Utils;\n\nimpl Utils {\n  pub fn get_atoms<'a>(names: Vec<&str>, atoms: xcb_atom_t, c: &xcb::Connection) {\n    let cookies: <std::vec::Vec<xcb::Cookie<'a, xcb::ffi::xcb_intern_atom_cookie_t>> as Trait>::new();\n    for name in &names {\n      cookies.push(xcb::intern_atom(c, false, name));\n    }\n    names.iter().zip(cookies.iter()) {\n      let reply = \n    }\n  }  \n}",
 			"file": "src/utils.rs",
-			"file_size": 424,
-			"file_write_time": 131431489488633086,
 			"settings":
 			{
-				"buffer_size": 436,
+				"buffer_size": 811,
+				"encoding": "UTF-8",
 				"line_ending": "Unix",
 				"name": "extern crate xcb;"
 			}
@@ -55,14 +57,6 @@
 			{
 				"buffer_size": 807,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
-			"settings":
-			{
-				"buffer_size": 51129,
 				"line_ending": "Unix"
 			}
 		}
@@ -204,6 +198,8 @@
 	],
 	"file_history":
 	[
+		"/home/insi/Projects/ruwm/src/config.rs",
+		"/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
 		"/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
 		"/home/insi/Downloads/tinywm-xcb.c",
 		"/home/insi/Projects/ruwm/src/xcblib.rs",
@@ -302,7 +298,7 @@
 	],
 	"find":
 	{
-		"height": 51.0
+		"height": 70.0
 	},
 	"find_in_files":
 	{
@@ -450,7 +446,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -459,15 +455,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 136,
+						"buffer_size": 148,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								66,
-								66
+								94,
+								94
 							]
 						],
 						"settings":
@@ -481,7 +477,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -490,15 +486,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3231,
+						"buffer_size": 3574,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2717,
-								2717
+								708,
+								708
 							]
 						],
 						"settings":
@@ -508,10 +504,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2184.0,
+						"translation.y": 400.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -520,27 +516,29 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 436,
+						"buffer_size": 811,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								382,
-								382
+								800,
+								800
 							]
 						],
 						"settings":
 						{
 							"auto_name": "extern crate xcb;",
-							"syntax": "Packages/Rust/Rust.sublime-syntax"
+							"syntax": "Packages/Rust/Rust.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -570,43 +568,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 4,
-					"file": "/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 51129,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9814,
-								9814
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 11610.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -614,7 +576,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 51.0
+		"height": 71.0
 	},
 	"input":
 	{
@@ -629,18 +591,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":

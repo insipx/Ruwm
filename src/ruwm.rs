@@ -1,6 +1,11 @@
 extern crate xcb;
-use std::process;
+
 use events::Events;
+use utils::Utils;
+use config::WM_ATOM_NAME as WM_ATOM_NAME;
+use config::WM_ATOM_NAME as NET_ATOM_NAME;
+
+use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
 pub struct Ruwm {
   width: u16,
@@ -8,6 +13,8 @@ pub struct Ruwm {
   root: u32,
   connection: xcb::Connection,
   screen_num: i32,
+  wmatoms: Vec<xcb_atom_t>,
+  netatoms: Vec<xcb_atom_t>,
 }
 
 impl Ruwm {
@@ -15,10 +22,18 @@ impl Ruwm {
   /* setup a new instance of Ruwm and set it up */
 
   pub fn new() -> Option<Self> {
+    let mut wmatoms : Vec<xcb_atom_t> = Vec::new();
+    let mut netatoms : Vec<xcb_atom_t> = Vec::new();
+
     let (connection, screen_num) = xcb::Connection::connect(None).unwrap();
 
     println!("Screen Num: {}", screen_num);
     let setup = Self::setup(&connection, screen_num);
+    Utils::get_atoms(WM_ATOM_NAME.to_vec(), &mut wmatoms, &connection);
+    Utils::get_atoms(NET_ATOM_NAME.to_vec(), &mut netatoms, &connection);
+
+    println!("ATOM WM: {:?}", wmatoms);
+    println!("ATOM NET: {:?}", netatoms);
 
     Some( Ruwm{
       width: setup.0,
@@ -26,6 +41,8 @@ impl Ruwm {
       root: setup.2,
       connection,
       screen_num,
+      wmatoms,
+      netatoms,
     })
   }
   
