@@ -53,31 +53,6 @@ impl Ruwm {
   }
 
   pub fn run(&self) {
-
-    /*for x in setup.roots() {
-      unsafe {
-        println!("x: {:?}", (*x.ptr).root);
-        println!("x: {:?}", (*x.ptr).default_colormap);
-        println!("x: {:?}", (*x.ptr).white_pixel);
-        println!("x: {:?}", (*x.ptr).black_pixel);
-        println!("x: {:?}", (*x.ptr).current_input_masks);
-        println!("x: {:?}", (*x.ptr).width_in_pixels);
-        println!("x: {:?}", (*x.ptr).height_in_pixels);
-        println!("x: {:?}", (*x.ptr).width_in_millimeters);
-        println!("x: {:?}", (*x.ptr).height_in_millimeters);
-        println!("x: {:?}", (*x.ptr).min_installed_maps);
-        println!("x: {:?}", (*x.ptr).max_installed_maps);
-        println!("x: {:?}", (*x.ptr).root_visual);
-        println!("x: {:?}", (*x.ptr).backing_stores);
-        println!("x: {:?}", (*x.ptr).save_unders);
-        println!("x: {:?}", (*x.ptr).root_depth);
-        println!("x: {:?}", (*x.ptr).allowed_depths_len);
-      }
-    }*/
-
-    println!("Screen height: {}", self.height);
-    println!("Screen width: {}", self.width);
-
     let events = [(
       xcb::CW_EVENT_MASK,
       xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS |
@@ -85,16 +60,7 @@ impl Ruwm {
     )];
 
     xcb::change_window_attributes(&self.connection, self.root, &events);
-/*
-    xcb::grab_key(&self.connection, true, self.root, xcb::MOD_MASK_2 as u16, 
-      xcb::NO_SYMBOL as u8, xcb::GRAB_MODE_ASYNC as u8, xcb::GRAB_MODE_ASYNC as u8);
-    
-    xcb::grab_button(&self.connection, false, self.root, events, xcb::GRAB_MODE_ASYNC as u8, 
-      xcb::GRAB_MODE_ASYNC as u8, self.root, xcb::NONE, 1, xcb::MOD_MASK_1 as u16);
-  
-    xcb::grab_button(&self.connection, false, self.root, events, xcb::GRAB_MODE_ASYNC as u8,
-      xcb::GRAB_MODE_ASYNC as u8, self.root, xcb::NONE, 3, xcb::MOD_MASK_1 as u16);
-*/
+
     self.connection.flush();
 
     'event_loop : loop {
