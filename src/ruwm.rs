@@ -3,7 +3,7 @@ extern crate xcb;
 use events::Events;
 use utils::Utils;
 use config::WM_ATOM_NAME as WM_ATOM_NAME;
-use config::WM_ATOM_NAME as NET_ATOM_NAME;
+use config::NET_ATOM_NAME as NET_ATOM_NAME;
 
 use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
@@ -31,7 +31,6 @@ impl Ruwm {
     let setup = Self::setup(&connection, screen_num);
     Utils::get_atoms(WM_ATOM_NAME.to_vec(), &mut wmatoms, &connection);
     Utils::get_atoms(NET_ATOM_NAME.to_vec(), &mut netatoms, &connection);
-
     println!("ATOM WM: {:?}", wmatoms);
     println!("ATOM NET: {:?}", netatoms);
 
@@ -79,9 +78,14 @@ impl Ruwm {
     println!("Screen height: {}", self.height);
     println!("Screen width: {}", self.width);
 
-    let events : u16 = 
-      (xcb::CW_EVENT_MASK | xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS | xcb::EVENT_MASK_EXPOSURE) as u16;
+    let events = [(
+      xcb::CW_EVENT_MASK,
+      xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS |
+       xcb::EVENT_MASK_EXPOSURE
+    )];
 
+    xcb::change_window_attributes(&self.connection, self.root, &events);
+/*
     xcb::grab_key(&self.connection, true, self.root, xcb::MOD_MASK_2 as u16, 
       xcb::NO_SYMBOL as u8, xcb::GRAB_MODE_ASYNC as u8, xcb::GRAB_MODE_ASYNC as u8);
     
@@ -90,7 +94,7 @@ impl Ruwm {
   
     xcb::grab_button(&self.connection, false, self.root, events, xcb::GRAB_MODE_ASYNC as u8,
       xcb::GRAB_MODE_ASYNC as u8, self.root, xcb::NONE, 3, xcb::MOD_MASK_1 as u16);
-
+*/
     self.connection.flush();
 
     'event_loop : loop {
@@ -100,7 +104,12 @@ impl Ruwm {
           match e.response_type() {
             xcb::BUTTON_PRESS => Events::button_press(e),
             xcb::BUTTON_RELEASE => Events::button_release(e),
-            xcb::KEY_PRESS => Events::key_press(e),
+            xcb::KEY_PRESS => {
+              let res = Events::key_press(e);
+              if res {
+                break 'event_loop;
+              }
+            },
             xcb::EXPOSE => Events::expose(e),
             _ => { 
               println!("Received some event: {}", e.response_type());

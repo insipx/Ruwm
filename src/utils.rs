@@ -1,5 +1,4 @@
 extern crate xcb;
-use std;
 use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 use xcb::ffi::xproto::xcb_intern_atom_cookie_t as xcb_intern_atom_cookie_t;
 pub struct Utils;
