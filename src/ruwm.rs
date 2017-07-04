@@ -67,23 +67,21 @@ impl Ruwm {
       let event = self.connection.wait_for_event();
       match event {
         Some(e) => {
-          match e.response_type() {
-            xcb::BUTTON_PRESS => Events::button_press(e),
-            xcb::BUTTON_RELEASE => Events::button_release(e),
-            xcb::KEY_PRESS => {
-              let res = Events::key_press(e);
-              if res {
-                break 'event_loop;
-              }
-            },
-            xcb::EXPOSE => Events::expose(e),
-            _ => { 
+          let result = match e.response_type() {
+            xcb::BUTTON_PRESS => { return Events::button_press(e); true },
+            xcb::BUTTON_RELEASE => {return Events::button_release(e); true },
+            xcb::KEY_PRESS => { return Events::key_press(e); true }, 
+            xcb::EXPOSE => { return Events::expose(e); true },
+            _ => {
               println!("Received some event: {}", e.response_type());
+              false;
             }
-          }
+          };
+          println!("Result: {}", result);
+          // if result { break 'event_loop; }
         },
         None => { }
-      }
+      };
     }
   }
 }
