@@ -36,26 +36,37 @@
 			"file": "src/ruwm.rs",
 			"settings":
 			{
-				"buffer_size": 3574,
+				"buffer_size": 2414,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/utils.rs",
-			"settings":
-			{
-				"buffer_size": 811,
-				"encoding": "UTF-8",
-				"line_ending": "Unix",
-				"name": "extern crate xcb;"
 			}
 		},
 		{
 			"file": "src/events.rs",
 			"settings":
 			{
-				"buffer_size": 807,
+				"buffer_size": 1086,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "extern crate xcb;\nuse xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;\nuse xcb::ffi::xproto::xcb_intern_atom_cookie_t as xcb_intern_atom_cookie_t;\npub struct Utils;\n\nimpl Utils {\n  pub fn get_atoms<'a>(names: Vec<&str>, atoms: &mut Vec<xcb_atom_t>, c: &xcb::Connection) {\n\n    type CookieAtom<'a> = xcb::Cookie<'a, xcb_intern_atom_cookie_t>;\n    let mut cookies = Vec::<CookieAtom>::new();\n\n    for name in &names {\n      cookies.push(xcb::intern_atom(c, false, name));\n    }\n\n    for (name, cookie) in names.iter().zip(cookies.iter()) {\n      let reply = cookie.get_reply();\n      match reply {\n        Ok(x) => atoms.push(x.atom()),\n        Err(e) => panic!(\"Error! in get_atoms(), error: {:?}\", e),\n      }\n    }\n  }\n}",
+			"file": "src/utils.rs",
+			"file_size": 716,
+			"file_write_time": 131434008560266534,
+			"settings":
+			{
+				"buffer_size": 716,
+				"line_ending": "Unix",
+				"name": "extern crate xcb;"
+			}
+		},
+		{
+			"file": "src/config.rs",
+			"settings":
+			{
+				"buffer_size": 485,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -68,7 +79,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 784.0,
+		"height": 328.0,
 		"last_filter": "",
 		"selected_items":
 		[
@@ -198,6 +209,7 @@
 	],
 	"file_history":
 	[
+		"/home/insi/nmap_find_services.py",
 		"/home/insi/Projects/ruwm/src/config.rs",
 		"/home/insi/Downloads/monsterwm-xcb/monsterwm.c",
 		"/home/insi/Projects/rust-xcb/examples/draw_root_window.rs",
@@ -298,7 +310,7 @@
 	],
 	"find":
 	{
-		"height": 70.0
+		"height": 48.0
 	},
 	"find_in_files":
 	{
@@ -462,8 +474,8 @@
 						"selection":
 						[
 							[
-								94,
-								94
+								146,
+								146
 							]
 						],
 						"settings":
@@ -486,15 +498,26 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3574,
+						"buffer_size": 2414,
 						"regions":
 						{
+							"bookmark_m":
+							{
+								"flags": 144,
+								"regions":
+								[
+									[
+										2335,
+										2335
+									]
+								]
+							}
 						},
 						"selection":
 						[
 							[
-								708,
-								708
+								2251,
+								2251
 							]
 						],
 						"settings":
@@ -504,32 +527,37 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 400.0,
+						"translation.y": 1590.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
-				},
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
 				{
 					"buffer": 2,
-					"file": "src/utils.rs",
+					"file": "src/events.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 811,
+						"buffer_size": 1086,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								800,
-								800
+								581,
+								581
 							]
 						],
 						"settings":
 						{
-							"auto_name": "extern crate xcb;",
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
@@ -543,23 +571,24 @@
 				},
 				{
 					"buffer": 3,
-					"file": "src/events.rs",
+					"file": "src/utils.rs",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 807,
+						"buffer_size": 716,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								441,
-								441
+								18,
+								18
 							]
 						],
 						"settings":
 						{
+							"auto_name": "extern crate xcb;",
 							"syntax": "Packages/Rust/Rust.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
@@ -570,13 +599,41 @@
 					},
 					"stack_index": 3,
 					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/config.rs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 485,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								485,
+								485
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Rust/Rust.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
 				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 71.0
+		"height": 70.0
 	},
 	"input":
 	{
@@ -591,11 +648,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.670446563257,
 			1.0
 		],
 		"rows":
@@ -617,7 +681,7 @@
 	"project": "ruwm.sublime-project",
 	"replace":
 	{
-		"height": 98.0
+		"height": 92.0
 	},
 	"save_all_on_build": true,
 	"select_file":

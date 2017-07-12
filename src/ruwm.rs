@@ -68,20 +68,20 @@ impl Ruwm {
       match event {
         Some(e) => {
           let result = match e.response_type() {
-            xcb::BUTTON_PRESS => { return Events::button_press(e); true },
-            xcb::BUTTON_RELEASE => {return Events::button_release(e); true },
-            xcb::KEY_PRESS => { return Events::key_press(e); true }, 
-            xcb::EXPOSE => { return Events::expose(e); true },
+            xcb::BUTTON_PRESS => Events::button_press(e),
+            xcb::BUTTON_RELEASE => Events::button_release(e),
+            xcb::KEY_PRESS => Events::key_press(e), 
+            xcb::EXPOSE => Events::expose(e),
             _ => {
               println!("Received some event: {}", e.response_type());
-              false;
+              false
             }
           };
-          println!("Result: {}", result);
-          // if result { break 'event_loop; }
+          if result { break 'event_loop; }
         },
         None => { }
       };
     }
+    println!("Exiting!");
   }
 }
