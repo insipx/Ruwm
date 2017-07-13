@@ -1,4 +1,5 @@
 extern crate xcb;
+extern crate scancode;
 
 use std::process::Command;
 
@@ -21,8 +22,9 @@ impl Events {
 
   pub fn key_press(e: xcb::Event<xcb_generic_event_t>) -> bool {
     let key_press : &xcb::KeyPressEvent = xcb::cast_event(&e);
-    println!("Key '{}', Hex: '{:X}' pressed", 
-      key_press.detail(), key_press.detail());
+    let code = scancode::Scancode::new(key_press.detail());
+    println!("Key '{}', Hex: '{:X}' pressed, scancode: {:?}", 
+      key_press.detail(), key_press.detail(), code.unwrap());
     if key_press.detail() == 0x18 {
       return true;
     }

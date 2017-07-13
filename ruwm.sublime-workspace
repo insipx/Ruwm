@@ -516,8 +516,8 @@
 						"selection":
 						[
 							[
-								2251,
-								2251
+								2250,
+								2250
 							]
 						],
 						"settings":
@@ -681,7 +681,7 @@
 	"project": "ruwm.sublime-project",
 	"replace":
 	{
-		"height": 92.0
+		"height": 136.0
 	},
 	"save_all_on_build": true,
 	"select_file":
