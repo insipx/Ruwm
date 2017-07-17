@@ -19,7 +19,7 @@ pub struct Ruwm {
 
 impl Ruwm {
 
-  /* setup a new instance of Ruwm and set it up */
+  /* get a connection to xserver, create a new instance of Ruwm and set it up */
 
   pub fn new() -> Option<Self> {
     let mut wmatoms : Vec<xcb_atom_t> = Vec::new();
@@ -56,7 +56,7 @@ impl Ruwm {
     let events = [(
       xcb::CW_EVENT_MASK,
       xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS |
-       xcb::EVENT_MASK_EXPOSURE
+       xcb::EVENT_MASK_EXPOSURE | xcb::EVENT_MASK_SUBSTRUCTURE_REDIRECT | xcb::EVENT_MASK_SUBSTRUCTURE_NOTIFY
     )];
 
     xcb::change_window_attributes(&self.connection, self.root, &events);
