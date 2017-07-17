@@ -8,6 +8,7 @@ use config::WM_ATOM_NAME as WM_ATOM_NAME; use config::NET_ATOM_NAME as NET_ATOM_
 
 use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
+// Handles setup and the event loop (running)
 pub struct Ruwm {
   width: u16,
   height: u16,
@@ -77,10 +78,10 @@ impl Ruwm {
       match event {
         Some(e) => {
           let result = match e.response_type() {
-            xcb::BUTTON_PRESS => Events::button_press(e),
-            xcb::BUTTON_RELEASE => Events::button_release(e),
-            xcb::KEY_PRESS => Events::key_press(e), 
-            xcb::EXPOSE => Events::expose(e),
+            xcb::BUTTON_PRESS => Events::handle_button_press(e),
+            xcb::BUTTON_RELEASE => Events::handle_button_release(e),
+            xcb::KEY_PRESS => Events::handle_key_press(e), 
+            xcb::EXPOSE => Events::handle_expose(e),
             _ => {
               println!("Received some event: {}", e.response_type());
               false
