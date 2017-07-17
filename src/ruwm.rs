@@ -23,6 +23,8 @@ pub struct Ruwm {
 impl Ruwm {
 
   /* setup a new instance of Ruwm and set it up */
+  /* get a connection to xserver, create a new instance of Ruwm and set it up */
+
   pub fn new() -> Option<Self> {
     let mut wmatoms : Vec<xcb_atom_t> = Vec::new();
     let mut netatoms : Vec<xcb_atom_t> = Vec::new();
