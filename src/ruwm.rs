@@ -2,9 +2,11 @@ extern crate xcb;
 
 use std::process;
 
-use events::Events;
+use err::RuwmError;
+use handlers::Handlers;
 use utils::Utils;
-use config::WM_ATOM_NAME as WM_ATOM_NAME; use config::NET_ATOM_NAME as NET_ATOM_NAME;
+use config::WM_ATOM_NAME as WM_ATOM_NAME; 
+use config::NET_ATOM_NAME as NET_ATOM_NAME;
 
 use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
@@ -23,23 +25,33 @@ pub struct Ruwm {
 
 impl Ruwm {
 
-  /* setup a new instance of Ruwm and set it up */
+  /* create a new instance of Ruwm and set it up */
   /* get a connection to xserver, create a new instance of Ruwm and set it up */
+  /* Parse any configuration from config file */
 
-  pub fn new() -> Option<Self> {
+  pub fn new() -> Result<Ruwm, RuwmError> {
     let mut wmatoms : Vec<xcb_atom_t> = Vec::new();
     let mut netatoms : Vec<xcb_atom_t> = Vec::new();
 
-    let (connection, screen_num) = xcb::Connection::connect(None).unwrap();
+    // make a connection to the X server
+    let (connection, screen_num) = match xcb::Connection::connect(None) {
+      Ok(c) => c,
+      Err(e) => RuwmError::CouldNotConnect(e).handle(),
+    };
+
+    // setup roots, width and height
+    let setup = match Self::setup(&connection, screen_num) {
+      Ok(s) => s,
+      Err(e) => e.handle(),
+    };
 
     println!("Screen Num: {}", screen_num);
-    let setup = Self::setup(&connection, screen_num);
     Utils::get_atoms(WM_ATOM_NAME.to_vec(), &mut wmatoms, &connection);
     Utils::get_atoms(NET_ATOM_NAME.to_vec(), &mut netatoms, &connection);
     println!("ATOM WM: {:?}", wmatoms);
     println!("ATOM NET: {:?}", netatoms);
 
-    Some( Ruwm{
+    Ok( Ruwm{
       width: setup.0,
       height: setup.1,
       root: setup.2,
@@ -51,10 +63,14 @@ impl Ruwm {
   }
   
   /* get width+height and the root screen */  
-  pub fn setup(ref connection: &xcb::Connection, screen_num: i32) -> (u16, u16, u32) {
+  pub fn setup(ref connection: &xcb::Connection, screen_num: i32)
+  -> Result<(u16, u16, u32), RuwmError> {
     let setup = connection.get_setup();
-    let screen = setup.roots().nth(screen_num as usize).unwrap();
-    return (screen.width_in_pixels(), screen.height_in_pixels(), screen.root());
+    if let Some(screen) = setup.roots().nth(screen_num as usize) {
+      Ok((screen.width_in_pixels(), screen.height_in_pixels(), screen.root()))
+    } else {
+      Err(RuwmError::CouldNotAcquireScreen)
+    }
   }
 
   pub fn run(&self) {
@@ -78,10 +94,10 @@ impl Ruwm {
       match event {
         Some(e) => {
           let result = match e.response_type() {
-            xcb::BUTTON_PRESS => Events::handle_button_press(e),
-            xcb::BUTTON_RELEASE => Events::handle_button_release(e),
-            xcb::KEY_PRESS => Events::handle_key_press(e), 
-            xcb::EXPOSE => Events::handle_expose(e),
+            xcb::BUTTON_PRESS => Handlers::handle_button_press(e),
+            xcb::BUTTON_RELEASE => Handlers::handle_button_release(e),
+            xcb::KEY_PRESS => Handlers::handle_key_press(e), 
+            xcb::EXPOSE => Handlers::handle_expose(e),
             _ => {
               println!("Received some event: {}", e.response_type());
               false
