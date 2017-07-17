@@ -23,7 +23,7 @@ pub enum RuwmError {
 
 impl RuwmError {
 	/// Print an error message and exit
-	// TODO create a logger fn
+	// TODO create a logger fn (Maybe better to make a macro?)
 	// Logger.error
 	// Logger.warn
 	// Logger.fatal
