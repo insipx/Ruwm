@@ -1,9 +1,10 @@
 extern crate xcb;
 
+use std::process;
+
 use events::Events;
 use utils::Utils;
-use config::WM_ATOM_NAME as WM_ATOM_NAME;
-use config::NET_ATOM_NAME as NET_ATOM_NAME;
+use config::WM_ATOM_NAME as WM_ATOM_NAME; use config::NET_ATOM_NAME as NET_ATOM_NAME;
 
 use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
@@ -16,11 +17,12 @@ pub struct Ruwm {
   wmatoms: Vec<xcb_atom_t>,
   netatoms: Vec<xcb_atom_t>,
 }
+// TODO 
+// Make Ruwm methods return a custom Err() struct
 
 impl Ruwm {
 
   /* setup a new instance of Ruwm and set it up */
-
   pub fn new() -> Option<Self> {
     let mut wmatoms : Vec<xcb_atom_t> = Vec::new();
     let mut netatoms : Vec<xcb_atom_t> = Vec::new();
@@ -55,11 +57,16 @@ impl Ruwm {
   pub fn run(&self) {
     let events = [(
       xcb::CW_EVENT_MASK,
-      xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE | xcb::EVENT_MASK_KEY_PRESS |
-       xcb::EVENT_MASK_EXPOSURE
+      xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE |
+      xcb::EVENT_MASK_KEY_PRESS | xcb::EVENT_MASK_EXPOSURE |
+      xcb::EVENT_MASK_SUBSTRUCTURE_REDIRECT | xcb::EVENT_MASK_SUBSTRUCTURE_NOTIFY
     )];
 
-    xcb::change_window_attributes(&self.connection, self.root, &events);
+    let cookie = xcb::change_window_attributes(&self.connection, self.root, &events);
+
+    if ! cookie.request_check().is_ok() {
+      panic!("There's another Window Manager Running!");
+    }
 
     self.connection.flush();
 

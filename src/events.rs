@@ -19,7 +19,6 @@ impl Events {
     println!("Button {:X} release", button_release.detail());
     false
   }
-
   pub fn key_press(e: xcb::Event<xcb_generic_event_t>) -> bool {
     let key_press : &xcb::KeyPressEvent = xcb::cast_event(&e);
     let code = scancode::Scancode::new(key_press.detail());
