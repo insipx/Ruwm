@@ -73,7 +73,7 @@ impl Ruwm {
     }
   }
 
-  pub fn run(&self) {
+  pub fn run(&self) { 
     let events = [(
       xcb::CW_EVENT_MASK,
       xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE |

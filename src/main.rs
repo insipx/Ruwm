@@ -1,5 +1,6 @@
 extern crate xcb;
 extern crate colored;
+extern crate scancode;
 
 use ruwm::Ruwm;
 
