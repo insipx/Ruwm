@@ -98,6 +98,7 @@ impl Ruwm {
             xcb::BUTTON_RELEASE => Handlers::handle_button_release(e),
             xcb::KEY_PRESS => Handlers::handle_key_press(e), 
             xcb::EXPOSE => Handlers::handle_expose(e),
+            xcb::MAP_REQUEST => Handlers::handle_map_request(e),
             _ => {
               println!("Received some event: {}", e.response_type());
               Ok(false)

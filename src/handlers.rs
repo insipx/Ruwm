@@ -62,7 +62,7 @@ impl Handlers {
    * When the user moves the mouse pointer onto a window, this event is triggered 
    * and callback called
    */
-  fn handle_enter_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_enter_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!(); 
   }
 
@@ -71,7 +71,7 @@ impl Handlers {
    * (e.g. when having no windows opened but moving mouse on the root screen
    * and crossing virtual screen boundaries), this callback gets called
    */
-  fn handle_motion_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_motion_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
@@ -80,7 +80,7 @@ impl Handlers {
    * we need to update our key bindings then (re-translate symbols)
    *
    */
-  fn handle_mapping_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_mapping_notify(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
@@ -88,7 +88,7 @@ impl Handlers {
    * A new window appeared on the screen (=was mapped), so let's manage it.
    *
    */
-  fn handle_map_request(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_map_request(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     let map : &xcb::MapRequestEvent = xcb::cast_event(&event);
     println!("Map Request!: {:?} ", map.window());
     Ok(false)
@@ -101,7 +101,7 @@ impl Handlers {
    * We generate a synthetic configure notify event to signalize the client
    * its "new" position.
    */
-  fn handle_configure_request(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_configure_request(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
@@ -110,7 +110,7 @@ impl Handlers {
    * changes the screen configuraton in any way (mode, position, ... )
    *
    */
-  fn handle_screen_change(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_screen_change(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
@@ -119,7 +119,7 @@ impl Handlers {
    * now, so we better clean up before (i3, not sure if this will be the case with ruwm)
    *
    */
-  fn handle_unmap_notify_event(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_unmap_notify_event(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!(); 
   } 
 
@@ -132,7 +132,7 @@ impl Handlers {
    * in the event data structure)
    *
    */
-  fn handle_destroy_notify_event(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
+  pub fn handle_destroy_notify_event(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
@@ -140,11 +140,11 @@ impl Handlers {
   // i3 as ref
   // fn handle_window_name_change(....)
 
-  fn event_is_ignored() -> Result<bool, RuwmError> {
+  pub fn event_is_ignored() -> Result<bool, RuwmError> {
     unimplemented!();
   }
 
-  fn check_crossing_screen_boundary(x: u32, y: u32) {
+  pub fn check_crossing_screen_boundary(x: u32, y: u32) {
     unimplemented!();
   }
 }
