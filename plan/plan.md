@@ -1,3 +1,15 @@
+# Events
+	- Mouse events
+		- how will handle them?
+		- 
+	- Touch Events
+		- drag to reorganize tiles
+
+# Key Configuration
+	- i3like configuration
+	- Config file parser
+	Future: 
+		- put files in system dirs '/usr/share/????' && '/home/$USER/.config/ruwm/config'
 
 # Map Event
 	- data structure (B-Tree)
@@ -8,22 +20,19 @@
 
 # IPC 
 	- IPC for communication with Ruwm
-	- seperate create/package/logic
+	- seperate crate/package/logic
 	- communicate with eventual RuwmBar
 	- UNIX Sockets
-
-# Key Configuration
-	- i3like configuration
-	- Config file parser
-	Future: 
-		- put files in system dirs '/usr/share/????' && '/home/$USER/.config/ruwm/config'
 
 # EWMH Compliance (ICCCM Compliance?)
 	- Gotta read through the rest of that spec x.X
 
 # Triage
 	- Map them windows
-	- Map Windows, default keybinding map, start on config file
+	- default keybinding map
+	- start on config file
+	- enum for keybindings?
+	- i should check if my stream is working
 
 ## Learning
 	- WTF is XKB and how do i use it
