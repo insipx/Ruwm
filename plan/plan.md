@@ -10,6 +10,12 @@
 	- Config file parser
 	Future: 
 		- put files in system dirs '/usr/share/????' && '/home/$USER/.config/ruwm/config'
+	- Scancodes
+		- create a thin wrapper around scancode::Scancode in order to be able to implement
+		Hash, PartialEq, Eq, and Hash for it.
+		- can translate scancodes into one-character-codes
+		- TODO Look into XKB. This may be my savour here for different keyboard layouts
+			- but i'm really not sure b/c i have no clue what it does
 
 # Map Event
 	- data structure (B-Tree)
@@ -52,11 +58,23 @@ https://www.x.org/wiki/guide/concepts/#index12h4
 https://tronche.com/gui/x/icccm/
 
 ### Docs
-http://rtbo.github.io/rust-xcb/xcb/
 https://xcb.freedesktop.org/XcbApi/
+https://www.x.org/docs/XKB/XKBproto.pdf
+https://www.x.org/wiki/XKB/
+
+### Rust Binding Docs
+http://rtbo.github.io/rust-xcb/xcb/
+https://docs.rs/xkb/0.1.2/xkb/
 
 ### Libraries
+
+#### In-Use
 https://github.com/rtbo/rust-xcb
 
+#### Plan To Use
+https://crates.io/crates/xkb
 
-
+#### Not Entirely sure how to use yet, but seem useful
+https://crates.io/crates/xkbcommon-sys
+https://crates.io/crates/xcb-util
+https://crates.io/crates/xkbcommon
