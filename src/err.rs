@@ -17,6 +17,12 @@ pub enum RuwmError {
 	OtherWmRunning,
 	// Input/Output with X Server could not work
 	IOError,
+	// Could not configure Bindings
+	// TODO eventually, instead of totally killing the WM
+	// Do what i3 does, keep default/last good bindings
+	// and display a nice terminal window in vim/emacs/nano
+	// with errors
+	CouldNotConfigureBindings(String),
 }
 
 
@@ -60,6 +66,7 @@ impl RuwmError {
 			RuwmError::CouldNotRegisterAtom(e) => panic!("{} {}", "Could not register atom".red(), e.bold().red()),
 			RuwmError::ConnectionInterrupted => panic!("{}", "Another WM is running, ruwm couldn't connect :-(".red()),
 			RuwmError::IOError => panic!("{}", "IO Error!".red()),
+			RuwmError::CouldNotConfigureBindings(e) => panic!("{} {}", "Could not configure bindings".red(), e.red()),
 			_ => panic!("{}", "Something unexpected happened! Exiting...".red()),
 		};
 	}

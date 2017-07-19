@@ -9,6 +9,8 @@ mod handlers;
 mod utils;
 mod config;
 mod err;
+mod bindings;
+
 // GENERAL
 // TODO
 // Create a WmError Struct
