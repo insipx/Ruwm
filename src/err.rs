@@ -1,4 +1,3 @@
-use std::process::exit;
 use xcb::base;
 use colored::Colorize;
 
@@ -54,10 +53,9 @@ impl RuwmError {
 					},
 					base::ConnError::ClosedFdPassingFailed => {
 						panic!("{}", "Connection closed because File Descriptor passing operation failed".red())
-					},
-					_ => panic!("{}", "Connection closed because of unknown error".red())
+					}
 				};
-			}
+			},
 			RuwmError::CouldNotAcquireScreen => panic!("{}", "Could not acquire screen".red()),
 			RuwmError::CouldNotRegisterAtom(e) => panic!("{} {}", "Could not register atom".red(), e.bold().red()),
 			RuwmError::ConnectionInterrupted => panic!("{}", "Another WM is running, ruwm couldn't connect :-(".red()),

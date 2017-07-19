@@ -100,10 +100,13 @@ impl Ruwm {
             xcb::EXPOSE => Handlers::handle_expose(e),
             _ => {
               println!("Received some event: {}", e.response_type());
-              false
+              Ok(false)
             }
           };
-          if result { break 'event_loop; }
+          match result {
+            Ok(r) => { if r { break 'event_loop; } },
+            Err(e) => { e.handle() }
+          }
         },
         None => { }
       };
