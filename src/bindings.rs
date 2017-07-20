@@ -6,21 +6,48 @@ use std::collections::HashMap;
 // not sure if this will work
 use scancode::Scancode;
 
-// A Scancode or combination of Scancodes
-// Which dictate an action
-#[derive(PartialEq, Eq, Hash)]
-struct Binding {
-	// Vector of scancodes
-	// if a binding is only one keystroke
-	// multiple 
-	keys: Vec<Scancode>,
+enum InputType {
+	Keyboard,
+	Mouse,
 }
-#[derive(PartialEq, Eq, Hash)]
-struct Action {
-	// TODO
-	// Figure out how to represent Actions
-	placeholder: i32,	
+
+/*
+impl InputType {
+
+
 }
+*/
+
+/* A Scancode or combination of Scancodes
+* Which dictate an action
+* Taken from i3. Not sure if i need this,
+* Just testing out xkb
+*/ 
+#[derive(PartialEq, Eq, Hash)]
+pub struct Binding {
+	/*
+	 * The type of input this binding is for (InputType enum)
+	 */
+	input_type: InputType,
+	keycode: u32,
+	/* 
+	 * Symbol the user specified in configfile. This needs to be 
+	 * stored with the binding to be able to re-convert it into a keycode
+	 * if the keyboard mapping changes (using Xmodmap for example)
+	 */
+	symbol: &str,
+
+	/* Command, like in command mode */
+	command: &str,
+
+}
+
+impl Binding {
+	pub fn new() -> Result<Binding, RuwmError> {
+		unimplemented!();	
+	}
+}
+
 
 pub struct Bindings {
 	// Scancode/Scancode Combo => Action
@@ -28,6 +55,7 @@ pub struct Bindings {
 }
 
 impl Bindings {
+	/*	
 	pub fn new() -> Result<Bindings, RuwmError> {
 		// get bindings
 		// configure bindings
@@ -38,6 +66,7 @@ impl Bindings {
 			bindings: HashMap::new()
 		})
 	}
+	*/
 	/*
 	 * Gets bindings from configuration file,
 	 * and stuffs them into a datastructure 
