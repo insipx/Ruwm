@@ -3,8 +3,23 @@ pub mod config_parser;
 
 pub struct ConfigParser;
 
+enum BindSym {
+	Key(String),
+	Symbols(String),
+	Actions(Vec<String>),
+}
 
-impl ConfigParser {
+enum Symbols {
+	
+}
+
+enum Variables {
 
 	
 }
+
+peg! parser(r#"
+#[pub]
+
+
+	"#)
