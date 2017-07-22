@@ -1,9 +1,9 @@
-use xcb;
-use scancode;
-use err::RuwmError;
+use ruwm::xcb;
+use ruwm::scancode;
+use ruwm::err::RuwmError;
 
 use std::process::Command;
-use xcb::ffi::base::xcb_generic_event_t as xcb_generic_event_t;
+use self::xcb::ffi::base::xcb_generic_event_t as xcb_generic_event_t;
 
 pub struct Handlers;
 /*

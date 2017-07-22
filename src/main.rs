@@ -1,15 +1,6 @@
-extern crate xcb;
-extern crate colored;
-extern crate scancode;
-
-use ruwm::Ruwm;
-
 mod ruwm;
-mod handlers;
-mod utils;
-mod config;
-mod err;
-mod bindings;
+
+use ruwm::ruwm::Ruwm;
 
 // GENERAL
 // TODO

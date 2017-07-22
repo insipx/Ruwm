@@ -78,8 +78,13 @@ Future:
 
 #### Plan To Use
 [XKB Library](https://crates.io/crates/xkb)
+[PEG Rust Library](https://github.com/kevinmehall/rust-peg/blob/master/README.md#readme)
 
 #### Not Entirely sure how to use yet, but seem useful
 [XKBcommon-sys Library](https://crates.io/crates/xkbcommon-sys)
 [XCB Util Library](https://crates.io/crates/xcb-util)
 [XKBcommon Library](https://crates.io/crates/xkbcommon)
+
+### Reference
+[PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
+[Peg Course](http://nathansuniversity.com/-PL101:CreateYourOwnProgrammingLanguage)

@@ -1,10 +1,8 @@
-use err::RuwmError;
+use ruwm::err::RuwmError;
 
-use xcb;
+use ruwm::xcb;
 use std::collections::HashMap;
-
-// not sure if this will work
-use scancode::Scancode;
+use ruwm::scancode::Scancode;
 
 enum InputType {
 	Keyboard,

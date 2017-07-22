@@ -1,14 +1,14 @@
-extern crate xcb;
-
+use ruwm::xcb;
 use std::process;
 
-use err::RuwmError;
-use handlers::Handlers;
-use utils::Utils;
-use config::WM_ATOM_NAME as WM_ATOM_NAME; 
-use config::NET_ATOM_NAME as NET_ATOM_NAME;
+use ruwm::err::RuwmError;
+use ruwm::handlers::Handlers;
+use ruwm::utils::Utils;
+use ruwm::config::WM_ATOM_NAME as WM_ATOM_NAME; 
+use ruwm::config::NET_ATOM_NAME as NET_ATOM_NAME;
 
-use xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
+
+use self::xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
 // Handles setup and the event loop (running)
 pub struct Ruwm {

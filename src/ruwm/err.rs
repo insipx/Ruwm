@@ -1,5 +1,5 @@
-use xcb::base;
-use colored::Colorize;
+use ruwm::xcb::base;
+use ruwm::colored::Colorize;
 
 // A simple error enum for handling ruwm errors
 

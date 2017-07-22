@@ -6,5 +6,6 @@ authors = ["Andrew Plaza <aplaza@liquidthink.net>"]
 [dependencies]
 xcb = "0.7.6"
 xkb = "0.1.2"
+peg = "0.5.4"
 scancode = "0.1.2"
 colored = "1.5.2"
