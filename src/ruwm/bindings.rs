@@ -21,7 +21,6 @@ impl InputType {
 * Taken from i3. Not sure if i need this,
 * Just testing out xkb
 */ 
-#[derive(PartialEq, Eq, Hash)]
 pub struct Binding {
 	/*
 	 * The type of input this binding is for (InputType enum)
@@ -33,10 +32,10 @@ pub struct Binding {
 	 * stored with the binding to be able to re-convert it into a keycode
 	 * if the keyboard mapping changes (using Xmodmap for example)
 	 */
-	symbol: &str,
+	// symbol: &str,
 
 	/* Command, like in command mode */
-	command: &str,
+	// command: &str,
 
 }
 
@@ -49,7 +48,7 @@ impl Binding {
 
 pub struct Bindings {
 	// Scancode/Scancode Combo => Action
-	pub bindings: HashMap<Binding, Action>,
+	// pub bindings: HashMap<Binding, Action>,
 }
 
 impl Bindings {
