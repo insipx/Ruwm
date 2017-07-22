@@ -1,0 +1,34 @@
+use self::*;
+// Symbol/Action definitions
+symbol -> super::Symbol
+    =
+
+action -> super::Action
+    = 
+
+symbols -> super::Symbols
+    =
+
+actions -> super::Actions
+    = 
+
+// keyword definitions
+bindsym -> super::Keyword
+    = "bindsym"i { match_str.to_string() }
+
+floating_mod -> super::Keyword
+    = "floating_mod"i {match_str.to_string() }
+
+// Combination Definitions
+
+/* BindSym, all we care about is what symbols 
+ * are associated with which actions
+ */
+bindsym_combo -> super::Config
+    = k:bindsym s:symbols a:actions { super::Config::BindSym(s,a) }
+floating_mod_combo -> super::Config
+    = k:floating_mod s:symbol { super::Config::FloatingMod(s) }
+
+// Element Definitions
+content -> Vec<super::Config>
+    = (bindsym_combo / floating_mod_combo)*

@@ -1,7 +1,6 @@
 mod ruwm;
 
 use ruwm::ruwm::Ruwm;
-
 // GENERAL
 // TODO
 // Create a WmError Struct

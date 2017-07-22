@@ -2,10 +2,14 @@
 name = "ruwm"
 version = "0.1.0"
 authors = ["Andrew Plaza <aplaza@liquidthink.net>"]
+build = "src/build.rs"
 
 [dependencies]
 xcb = "0.7.6"
 xkb = "0.1.2"
-peg = "0.5.4"
 scancode = "0.1.2"
 colored = "1.5.2"
+
+[build-dependencies]
+peg = "0.5.4"
+
