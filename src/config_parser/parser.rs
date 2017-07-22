@@ -3,6 +3,8 @@
 */
 
 use config_parser::Config;
+use config_parser::Action;
+
 pub mod config_grammar {
 	include!(concat!(env!("OUT_DIR"), "/config_grammar.rs"));
 }
@@ -10,7 +12,15 @@ pub mod config_grammar {
 #[cfg(test)]
 #[test]
 fn test_parser() {
-	match config_grammar::content("bindsym a talk\n") {
+	match config_grammar::content("bindsym LeftGui+1 workspace 1 
+   
+   bindsym RightGui+2 workspace 2       
+
+
+bindsym Hello+3 workspace 5
+
+
+"){
 		Ok(r) => println!("Parsed as: {:?}", r),
 		Err(e) => println!("Parse error: {}", e),
 	}	

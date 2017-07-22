@@ -1,19 +1,20 @@
 use super::*;
 
+// as many spaces as we want, ended with a line-break
 end ->  () 
-    = "\n"
-// Symbol/Action definitions
-symbol -> String
-    = s:$([a-zA-Z]+) { s.to_string() }
+    = [ \n]*
 
-action -> String
-    = a:$([a-zA-Z]+) { a.to_string() }
+    // Symbol/Action definitions
+symbol -> String
+    = s:$([a-zA-Z0-9]+) { s.to_string() }
+// Action going to have to go down it's own syntax tree
+// EX: if an action is to be "exec"
 
 symbols -> Vec<String>
-    = (symbol)*
+    = symbol ++ "+"
 
-actions -> Vec<String>
-    = (action)*
+action -> super::Action
+    = ( exec / workspace )
 
 // keyword definitions
 bindsym -> ()
@@ -22,18 +23,34 @@ bindsym -> ()
 floating_mod -> ()
     = "floating_mod"i
 
+
+// Action Definitions
+
+// should split action arguments into vec
+// so that when spawning process, can do it without additional parsing
+exec -> super::Action
+    = "exec" a:$([a-zA-Z0-9]*<1>) ++ " " { super::Action::Exec(a.to_string()) }
+
+workspace -> super::Action
+    = "workspace " w:$([0-9]*<1>) { super::Action::Workspace(w.to_string()) }
+/*
+ *  eventually,
+ *  = "workspace" ( variable / [a-zA-Z0-9]*<1> )
+ * /
+
+
 // Combination Definitions
 
 /* BindSym, all we care about is what symbols 
  * are associated with which actions
  */
 bindsym_combo -> super::Config
-    = k:bindsym " " s:symbols " " a:actions e:end { super::Config::BindSym(s,a) }
+    = k:bindsym " " s:symbols " " a:action e:end { super::Config::BindSym(s,a) }
 
 floating_mod_combo -> super::Config
-    = k:floating_mod s:symbol e:end { super::Config::FloatingMod(s) }
+    = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
 // Element Definitions
 #[pub]
 content -> Vec<super::Config>
-    = (bindsym_combo / floating_mod_combo)*
+    = c:(bindsym_combo / floating_mod_combo)* {c}
