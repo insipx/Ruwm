@@ -1,23 +1,26 @@
-use self::*;
+use super::*;
+
+end ->  () 
+    = "\n"
 // Symbol/Action definitions
-symbol -> super::Symbol
-    =
+symbol -> String
+    = s:$([a-zA-Z]+) { s.to_string() }
 
-action -> super::Action
-    = 
+action -> String
+    = a:$([a-zA-Z]+) { a.to_string() }
 
-symbols -> super::Symbols
-    =
+symbols -> Vec<String>
+    = (symbol)*
 
-actions -> super::Actions
-    = 
+actions -> Vec<String>
+    = (action)*
 
 // keyword definitions
-bindsym -> super::Keyword
-    = "bindsym"i { match_str.to_string() }
+bindsym -> ()
+    = "bindsym"i
 
-floating_mod -> super::Keyword
-    = "floating_mod"i {match_str.to_string() }
+floating_mod -> ()
+    = "floating_mod"i
 
 // Combination Definitions
 
@@ -25,10 +28,12 @@ floating_mod -> super::Keyword
  * are associated with which actions
  */
 bindsym_combo -> super::Config
-    = k:bindsym s:symbols a:actions { super::Config::BindSym(s,a) }
+    = k:bindsym " " s:symbols " " a:actions e:end { super::Config::BindSym(s,a) }
+
 floating_mod_combo -> super::Config
-    = k:floating_mod s:symbol { super::Config::FloatingMod(s) }
+    = k:floating_mod s:symbol e:end { super::Config::FloatingMod(s) }
 
 // Element Definitions
+#[pub]
 content -> Vec<super::Config>
     = (bindsym_combo / floating_mod_combo)*

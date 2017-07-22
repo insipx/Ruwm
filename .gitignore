@@ -2,3 +2,4 @@ tmp*
 ruwm.sublime-workspace
 Cargo.lock
 target/
+.*.sw*
