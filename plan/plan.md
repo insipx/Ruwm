@@ -17,6 +17,8 @@ Future:
 	- can translate scancodes into one-character-codes
 	- TODO Look into XKB. This may be my savour here for different keyboard layouts
 		- but i'm really not sure b/c i have no clue what it does
+	- XKB
+		- 
 
 ## Config File
 - Go Custom File
@@ -88,3 +90,7 @@ Future:
 ### Reference
 [PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
 [Peg Course](http://nathansuniversity.com/-PL101:CreateYourOwnProgrammingLanguage)
+[XKB Libray spec](https://www.x.org/releases/current/doc/libX11/XKB/xkblib.html#acknowledgement)
+[XKB protocol spec](https://www.x.org/releases/current/doc/kbproto/xkbproto.html)
+[XKB Config Guide](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
+[Further enhance XKB](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
