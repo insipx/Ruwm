@@ -4,17 +4,26 @@ use super::*;
 end ->  () 
     = [ \n]*
 
-    // Symbol/Action definitions
+empty_vec -> Vec<String>
+    = &(.*<1>) {Vec::new()}
+
+// Symbol/Action definitions
 symbol -> String
-    = s:$([a-zA-Z0-9]+) { s.to_string() }
+    = s:$([a-zA-Z0-9'":]+) { s.to_string() }
+
+variable -> String
+    = s:$("$"[a-zA-Z0-9]+) { s.to_string() }
+
+variables -> Vec<String>
+    = variable ++ [+ ]
 // Action going to have to go down it's own syntax tree
 // EX: if an action is to be "exec"
 
 symbols -> Vec<String>
-    = symbol ++ "+"
+    = (variable / symbol) ++ "+"
 
 action -> super::Action
-    = ( exec / workspace )
+    = ( exec / workspace / focus )
 
 // keyword definitions
 bindsym -> ()
@@ -23,21 +32,27 @@ bindsym -> ()
 floating_mod -> ()
     = "floating_mod"i
 
+set -> ()
+    = "set"i
 
 // Action Definitions
+exec_option -> String
+    = o:$( ([-] [a-zA-Z]+) / ([--] [a-zA-Z\-]+)) { o.to_string() }
+
+exec_options -> Vec<String>
+    = exec_option ** " "
 
 // should split action arguments into vec
 // so that when spawning process, can do it without additional parsing
 exec -> super::Action
-    = "exec" a:$([a-zA-Z0-9]*<1>) ++ " " { super::Action::Exec(a.to_string()) }
+    = "exec " o:(exec_options)? " "* ['"]a:$([a-zA-Z0-9\-$.\/ ]*)['"] { super::Action::Exec(o, a.to_string()) }
 
 workspace -> super::Action
-    = "workspace " w:$([0-9]*<1>) { super::Action::Workspace(w.to_string()) }
-/*
- *  eventually,
- *  = "workspace" ( variable / [a-zA-Z0-9]*<1> )
- * /
+    = "workspace " w:$( variable / [0-9]*<1>) { super::Action::Workspace(w.to_string()) }
 
+// d for direction
+focus -> super::Action
+    = "focus " d:$([a-z]*<2,5>) { super::Action::Focus(d.to_string())}
 
 // Combination Definitions
 
@@ -45,12 +60,18 @@ workspace -> super::Action
  * are associated with which actions
  */
 bindsym_combo -> super::Config
-    = k:bindsym " " s:symbols " " a:action e:end { super::Config::BindSym(s,a) }
+    = k:bindsym " " s:(symbols) " " a:action e:end { super::Config::BindSym(s,a) }
 
 floating_mod_combo -> super::Config
     = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
+set_combo -> super::Config
+    = k:set " " v:variable " " s:symbols e:end { super::Config::Set(v, s) }
+
+exec_combo -> super::Config 
+    = k:exec e:end { super::Config::Exec(k) }
+
 // Element Definitions
 #[pub]
 content -> Vec<super::Config>
-    = c:(bindsym_combo / floating_mod_combo)* {c}
+    = c:(bindsym_combo / floating_mod_combo / set_combo / exec_combo )* {c}

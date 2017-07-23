@@ -1,10 +1,12 @@
 pub mod parser;
 
+type Direction = String;
+
 #[derive(Debug)]
 #[allow(dead_code)]
 pub enum Config {
-	// Exec(Options, String),
-	// Set(Variable, Symbol), // variable -> Symbol
+	Set(String, Vec<String>), // variable -> Symbol
+	Exec(Action),
 	BindSym(Vec<String>, Action),
 	FloatingMod(String),
 }
@@ -16,7 +18,7 @@ pub enum Config {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub enum Action {
-	Exec(String), // standalone
-	Workspace(String)
+	Exec(Option<Vec<String>>, String), // standalone
+	Workspace(String),
+	Focus(Direction)
 }
-
