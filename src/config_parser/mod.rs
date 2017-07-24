@@ -1,5 +1,5 @@
 pub mod parser;
-
+use std::collections::HashMap;
 type Direction = String;
 
 #[derive(Debug)]
@@ -22,3 +22,26 @@ pub enum Action {
 	Workspace(String),
 	Focus(Direction)
 }
+
+
+// we can just make the String a ref to the Vector of Symbols,
+// it doesn't matter, as long as we can access those variables later.
+pub struct Variables<'a> {
+  pub variables: HashMap<String, Vec<&'a mut str>>,
+}
+
+impl<'a> Variables<'a> {
+  pub fn new() -> Self {
+
+    Variables {
+      variables: HashMap::new(),
+    }
+  }
+
+  pub fn set(&mut self, v: String, s: Vec<String>) -> Config {
+    self.variables.insert(v, s.as_mut());
+
+    Config::Set(v,s)
+  }
+}
+

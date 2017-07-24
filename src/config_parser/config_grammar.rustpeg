@@ -1,11 +1,9 @@
 use super::*;
+#![arguments(variables: &mut super::Variables )]
 
 // as many spaces as we want, ended with a line-break
 end ->  () 
     = [ \n]*
-
-empty_vec -> Vec<String>
-    = &(.*<1>) {Vec::new()}
 
 // Symbol/Action definitions
 symbol -> String
@@ -66,7 +64,7 @@ floating_mod_combo -> super::Config
     = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
 set_combo -> super::Config
-    = k:set " " v:variable " " s:symbols e:end { super::Config::Set(v, s) }
+    = k:set " " v:variable " " s:symbols e:end { variables.set(v,s) }
 
 exec_combo -> super::Config 
     = k:exec e:end { super::Config::Exec(k) }

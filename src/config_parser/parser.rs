@@ -11,6 +11,9 @@ pub mod config_grammar {
 #[cfg(test)]
 #[test]
 fn test_parser() {
+
+  let variables = config_parser::Variables::new();
+
 	match config_grammar::content("bindsym LeftGui+1 workspace 1 
    
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
@@ -29,7 +32,7 @@ exec --no-startup-id 'nm-applet'
 
 set $left h
 
-"){
+", &mut variables){
 		Ok(r) => println!("Parsed as: {:?}", r),
 		Err(e) => println!("Parse error: {}", e),
 	}	
