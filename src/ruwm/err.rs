@@ -1,7 +1,9 @@
 use ruwm::xcb::base;
 use ruwm::colored::Colorize;
 
-// A simple error enum for handling ruwm errors
+/* A simple error enum for handling ruwm errors
+ * Panics upon error, with a red error message
+ */
 
 #[derive(Debug)]
 pub enum RuwmError {

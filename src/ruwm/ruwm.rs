@@ -20,8 +20,6 @@ pub struct Ruwm {
   wmatoms: Vec<xcb_atom_t>,
   netatoms: Vec<xcb_atom_t>,
 }
-// TODO 
-// Make Ruwm methods return a custom Err() struct
 
 impl Ruwm {
 
