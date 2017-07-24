@@ -12,7 +12,7 @@ pub mod config_grammar {
 #[test]
 fn test_parser() {
 
-  let variables = config_parser::Variables::new();
+  let mut variables = Variables::new();
 
 	match config_grammar::content("bindsym LeftGui+1 workspace 1 
    

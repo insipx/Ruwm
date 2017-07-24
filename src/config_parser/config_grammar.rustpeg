@@ -14,6 +14,10 @@ variable -> String
 
 variables -> Vec<String>
     = variable ++ [+ ]
+
+get_variable -> Vec<String> 
+    = s:variable { variables.get(&s) }
+
 // Action going to have to go down it's own syntax tree
 // EX: if an action is to be "exec"
 
@@ -46,7 +50,7 @@ exec -> super::Action
     = "exec " o:(exec_options)? " "* ['"]a:$([a-zA-Z0-9\-$.\/ ]*)['"] { super::Action::Exec(o, a.to_string()) }
 
 workspace -> super::Action
-    = "workspace " w:$( variable / [0-9]*<1>) { super::Action::Workspace(w.to_string()) }
+    = "workspace " w: (get_variable / [0-9]*<1>) { super::Action::Workspace(w) }
 
 // d for direction
 focus -> super::Action
@@ -64,7 +68,7 @@ floating_mod_combo -> super::Config
     = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
 set_combo -> super::Config
-    = k:set " " v:variable " " s:symbols e:end { variables.set(v,s) }
+    = k:set " " v:variable " " s:symbols e:end { variables.set(v, s) }
 
 exec_combo -> super::Config 
     = k:exec e:end { super::Config::Exec(k) }

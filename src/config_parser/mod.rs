@@ -26,11 +26,11 @@ pub enum Action {
 
 // we can just make the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
-pub struct Variables<'a> {
-  pub variables: HashMap<String, Vec<&'a mut str>>,
+pub struct Variables {
+  pub variables: HashMap<String, Vec<String>>,
 }
 
-impl<'a> Variables<'a> {
+impl Variables {
   pub fn new() -> Self {
 
     Variables {
@@ -39,9 +39,17 @@ impl<'a> Variables<'a> {
   }
 
   pub fn set(&mut self, v: String, s: Vec<String>) -> Config {
-    self.variables.insert(v, s.as_mut());
+    self.variables.insert(v.clone(), s.clone());
+    Config::Set(v, s)
+  }
 
-    Config::Set(v,s)
+  pub fn get(&self, k: &str) -> Vec<String> {
+    let result = match self.variables.get(k) {
+      Some(s) => s,
+      None => panic!("Variable: {} not found!", k),
+    };
+
+    return result;
   }
 }
 
