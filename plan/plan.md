@@ -94,3 +94,4 @@ Future:
 [XKB protocol spec](https://www.x.org/releases/current/doc/kbproto/xkbproto.html)
 [XKB Config Guide](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
 [Further enhance XKB](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
+[libxkbcommon quick guide](https://xkbcommon.org/doc/current/md_doc_quick-guide.html)
