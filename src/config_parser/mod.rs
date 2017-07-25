@@ -16,6 +16,8 @@ pub enum Config {
 	Exec(Action),
 	BindSym(Vec<String>, Action),
 	FloatingMod(String),
+  Comment(),
+  DeadSpace(),
 }
 
 /* some actions are standalone
@@ -47,9 +49,15 @@ impl Variables {
   }
   #[allow(dead_code)]
   pub fn set(&mut self, v: String, s: Vec<String>) -> Config {
-    self.variables.insert(v.clone(), s.clone());
-    Config::Set(v, s)
+    match self.variables.contains_key(&v) {
+      true => panic!("Duplicate Variable! Variable: {} already exits!", v),
+      false => {
+        self.variables.insert(v.clone(), s.clone());
+        Config::Set(v, s) 
+      }
+    }
   }
+
   #[allow(dead_code)]
   pub fn get(&self, k: &str) -> Vec<String> {
     let result = match self.variables.get(k) {
@@ -72,6 +80,8 @@ impl Variables {
     if result.len() > 1 {
       panic!("More than one symbol attached to this variable!: {}", k);
     }
+
+    println!("Called!: {}", result[0]);
 
     String::from(result[0].clone())
   }

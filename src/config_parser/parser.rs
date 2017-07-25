@@ -15,11 +15,12 @@ fn test_parser() {
   let mut variables = Variables::new();
 
 	match config_grammar::content("bindsym LeftGui+1 workspace 1 
-   
+
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
    bindsym RightGui+2 workspace 2       
 
 set $ws0 '0:emp'
+bindsym RightGui+3 workspace $ws0
 bindsym Hello+3 workspace 5
 
 bindsym $super+$left focus left
