@@ -17,7 +17,7 @@ fn test_parser() {
 	match config_grammar::content("bindsym LeftGui+1 workspace 1 
 
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
-   bindsym RightGui+2 workspace 2 
+   bindsym RightGui+2 workspace 2 # this is another comment
 
 
   # This is a comment
