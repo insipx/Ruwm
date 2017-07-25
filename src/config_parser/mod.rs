@@ -12,7 +12,7 @@ type Direction = String;
 #[derive(Debug)]
 #[allow(dead_code)]
 pub enum Config {
-	Set(String, Vec<String>), // variable -> Symbol
+	Set(), // variable -> Symbol
 	Exec(Action),
 	BindSym(Vec<String>, Action),
 	FloatingMod(String),
@@ -51,8 +51,8 @@ impl Variables {
     match self.variables.contains_key(&v) {
       true => panic!("Duplicate Variable! Variable: {} already exits!", v),
       false => {
-        self.variables.insert(v.clone(), s.clone());
-        Config::Set(v, s) 
+        self.variables.insert(v, s);
+        Config::Set()
       }
     }
   }

@@ -27,7 +27,7 @@ get_variable -> Vec<String>
 
 #[pub]
 get_single_s_from_var -> String
-    = v:$variable { println!("VARIABLE: {}, S: {}", v, variables.get_single(v)); variables.get_single(v) }
+    = v:$(variable) { println!("VARIABLE: {}, S: {}", v, variables.get_single(v)); variables.get_single(v) }
 
 // Action going to have to go down it's own syntax tree
 // EX: if an action is to be "exec"
@@ -61,7 +61,7 @@ exec -> super::Action
     = "exec " o:(exec_options)? " "* ['"]a:$([a-zA-Z0-9\-$.\/ ]*)['"] { super::Action::Exec(o, a.to_string()) }
 
 workspace -> super::Action
-    = "workspace " w: $(get_single_s_from_var / [0-9]*<1>) { super::Action::Workspace(w.to_string()) }
+    = "workspace " w:$(get_single_s_from_var / [0-9]*<1>) { super::Action::Workspace(w.to_string()) }
 
 // d for direction
 focus -> super::Action
@@ -87,4 +87,4 @@ exec_combo -> super::Config
 // Element Definitions
 #[pub]
 content -> Vec<super::Config>
-    = c:( comment / set_combo / bindsym_combo / floating_mod_combo / exec_combo )* {c}
+    =  (comment / set_combo / bindsym_combo / floating_mod_combo / exec_combo )* 
