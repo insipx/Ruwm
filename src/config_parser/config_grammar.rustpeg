@@ -30,6 +30,12 @@ get_single_s_from_var -> String
 action -> super::Action
     = ( exec / workspace / focus )
 
+comment -> super::Config
+    = "#" [^\n]* e:end { super::Config::Comment() }
+
+dead_space -> super::Config
+    = [ ]+ e:end { super::Config::DeadSpace() }
+
 // keyword definitions
 bindsym -> ()
     = "bindsym"i
@@ -76,13 +82,7 @@ set_combo -> super::Config
 exec_combo -> super::Config 
     = k:exec e:end { super::Config::Exec(k) }
 
-comment -> super::Config
-    = "#" [a-zA-Z0-9 -_\]\['"\\\t!@#$%^&*()|=+]+ e:end { super::Config::Comment() }
-
-dead_space -> super::Config
-    = [ ]+ e:end { super::Config::DeadSpace() }
-
 // Element Definitions
 #[pub]
 content -> Vec<super::Config>
-    = c:(comment / dead_space / bindsym_combo / floating_mod_combo / set_combo / exec_combo )* {c}
+    = c:( comment / #quiet<dead_space> / bindsym_combo / floating_mod_combo / set_combo / exec_combo )* {c}
