@@ -33,9 +33,6 @@ action -> super::Action
 comment -> super::Config
     = "#" [^\n]* e:end { super::Config::Comment() }
 
-dead_space -> super::Config
-    = [ ]+ e:end { super::Config::DeadSpace() }
-
 // keyword definitions
 bindsym -> ()
     = "bindsym"i
