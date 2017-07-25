@@ -22,7 +22,7 @@ get_variable -> Vec<String>
     = v:variable { variables.get(&v) }
 
 get_single_s_from_var -> String
-    = v:variable { variables.get_single(&v) }
+    = v:variable { println!("VARIABLE: {}, S: {}", v, variables.get_single(&v)); variables.get_single(&v) }
 
 // Action going to have to go down it's own syntax tree
 // EX: if an action is to be "exec"
