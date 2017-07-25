@@ -1,4 +1,4 @@
-pub mod parser;
+pub mod parser; 
 use std::collections::HashMap;
 type Direction = String;
 
@@ -67,7 +67,7 @@ impl Variables {
     return result.clone();
   }
 
-  //if there should only be one symbol attached to a variable
+  // if there should only be one symbol attached to a variable
   // IE for workspaces
   #[allow(dead_code)]
   pub fn get_single(&self, k: &str) -> String {

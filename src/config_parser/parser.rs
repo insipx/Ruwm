@@ -25,7 +25,7 @@ fn test_parser() {
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
    bindsym RightGui+2 workspace 2 # this is another comment
 
-
+set $super Ctrl+Mod4
   # This is a comment
 set $ws0 '0:emp'
 bindsym RightGui+3 workspace $ws0
@@ -44,5 +44,10 @@ set $left h
 ", &mut variables){
 		Ok(r) => println!("Parsed as: {:?}", r),
 		Err(e) => println!("Parse error: {}", e),
-	}	
+	};
+
+  match config_grammar::get_single_s_from_var("$ws0", &mut variables) {
+    Ok(r) => println!("parsed as: {:?}", r),
+    Err(e) => println!("Parse error: {}", e),
+  }
 }
