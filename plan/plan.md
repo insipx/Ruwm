@@ -80,7 +80,9 @@ Future:
 
 #### Plan To Use
 [XKB Library](https://crates.io/crates/xkb)
+[XKB BEST LIB (i think)](https://github.com/rtbo/xkbcommon-rs)
 [PEG Rust Library](https://github.com/kevinmehall/rust-peg/blob/master/README.md#readme)
+[XCB Util](https://github.com/meh/rust-xcb-util)
 
 #### Not Entirely sure how to use yet, but seem useful
 [XKBcommon-sys Library](https://crates.io/crates/xkbcommon-sys)
@@ -95,3 +97,5 @@ Future:
 [XKB Config Guide](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
 [Further enhance XKB](https://www.x.org/releases/current/doc/xorg-docs/input/XKB-Config.html)
 [libxkbcommon quick guide](https://xkbcommon.org/doc/current/md_doc_quick-guide.html)
+
+
