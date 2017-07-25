@@ -16,8 +16,7 @@ pub enum Config {
 	Exec(Action),
 	BindSym(Vec<String>, Action),
 	FloatingMod(String),
-  Comment(),
-  DeadSpace(),
+  Comment()
 }
 
 /* some actions are standalone

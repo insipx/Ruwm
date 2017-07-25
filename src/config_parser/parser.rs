@@ -13,7 +13,12 @@ pub mod config_grammar {
 fn test_parser() {
 
   let mut variables = Variables::new();
-
+  // TODO
+  // the fact that the first line must be at the very beginning
+  // is not a very big deal, since we can just strip all whitespace until
+  // we reach an ascii character
+  // but if there is a easy way to fix this in the grammar, then that is the
+  // better option
 	match config_grammar::content("bindsym LeftGui+1 workspace 1 
 
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
