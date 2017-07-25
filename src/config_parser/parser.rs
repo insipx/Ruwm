@@ -18,7 +18,7 @@ fn test_parser() {
 
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
    bindsym RightGui+2 workspace 2       
-
+# This is a comment
 set $ws0 '0:emp'
 bindsym RightGui+3 workspace $ws0
 bindsym Hello+3 workspace 5
