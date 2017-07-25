@@ -77,7 +77,7 @@ exec_combo -> super::Config
     = k:exec e:end { super::Config::Exec(k) }
 
 comment -> super::Config
-    = "#" .[^\n] e:end { super::Config::Comment() }
+    = "#" [a-zA-Z0-9 -_\]\['"\\\t!@#$%^&*()|=+]+ e:end { super::Config::Comment() }
 
 dead_space -> super::Config
     = [ ]+ e:end { super::Config::DeadSpace() }
