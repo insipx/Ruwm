@@ -19,7 +19,8 @@ fn test_parser() {
   // we reach an ascii character
   // but if there is a easy way to fix this in the grammar, then that is the
   // better option
-	match config_grammar::content("bindsym LeftGui+1 workspace 1 
+	match config_grammar::content("# A comment
+		bindsym LeftGui+1 workspace 1 
 
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
    bindsym RightGui+2 workspace 2 # this is another comment

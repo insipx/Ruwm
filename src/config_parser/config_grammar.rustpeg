@@ -3,7 +3,7 @@ use super::*;
 
 // as many spaces as we want, ended with a line-break
 end ->  () 
-    = [ \n]*
+    = [ \n\\\t]*
 
 // Symbol/Action definitions
 symbol -> String
