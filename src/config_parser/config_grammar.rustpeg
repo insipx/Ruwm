@@ -13,7 +13,7 @@ symbols -> Vec<String>
     = (variable / symbol) ++ "+"
 
 variable -> String
-    = s:$("$"[a-zA-Z0-9]+) { s.to_string() }
+    = v:$("$"[a-zA-Z0-9]+) { v.to_string() }
 
 variables -> Vec<String>
     = variable ++ [+ ]
