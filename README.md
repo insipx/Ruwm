@@ -1,6 +1,6 @@
 # Ruwm
 
-[![Build Status](https://travis-ci.org/InsidiousMind/Ruwm.svg?branch=master)](https://travis-ci.org/InsidiousMind/Ruwm)https://travis-ci.org/InsidiousMind/Ruwm.svg?branhttps://travis-ci.org/InsidiousMind/Ruwm.svg?branch=masterch=master
+[![Build Status](https://travis-ci.org/InsidiousMind/Ruwm.svg?branch=master)](https://travis-ci.org/InsidiousMind/Ruwm)
 
 A Window Manager Written in Rust
 
