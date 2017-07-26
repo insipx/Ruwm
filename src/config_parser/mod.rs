@@ -34,11 +34,11 @@ pub enum Action {
 
 // we can just make the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
-pub struct Variables {
-  pub variables: HashMap<String, Vec<String>>,
+pub struct Variables<'a> {
+  pub variables: HashMap<String, Vec<&'a str>>,
 }
 
-impl<'a> Variables {
+impl<'a> Variables<'a> {
   #[allow(dead_code)]
   pub fn new() -> Self {
 
@@ -47,7 +47,7 @@ impl<'a> Variables {
     }
   }
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<String>) -> Config {
+  pub fn set(&mut self, v: String, s: Vec<&'a str>) -> Config {
     match self.variables.contains_key(&v) {
       true => panic!("Duplicate Variable! Variable: {} already exits!", v),
       false => {
@@ -58,13 +58,14 @@ impl<'a> Variables {
   }
 
   #[allow(dead_code)]
-  pub fn get(&self, k: &str) -> Vec<String> {
-    let result = match self.variables.get(k) {
-      Some(s) => s,
+  pub fn get(&'a self, k: &str) -> Vec<&'a str> {
+    match self.variables.get(k) {
+      Some(s) => {
+        *s
+      },
       None => panic!("Variable: {} not found!", k),
-    };
+    }
 
-    return result.clone();
   }
 
   // if there should only be one symbol attached to a variable
