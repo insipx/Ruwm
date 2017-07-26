@@ -1,6 +1,5 @@
 mod ruwm;
 mod config_parser;
-use config_parser::parser::config_grammar as parser;
 
 use ruwm::ruwm::Ruwm;
 
