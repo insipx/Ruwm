@@ -12,7 +12,7 @@ type Direction = String;
 #[derive(Debug)]
 #[allow(dead_code)]
 pub enum Config {
-	Set(), // variable -> Symbol
+	Set(String, Vec<String>), // variable -> Symbol
 	Exec(Action),
 	BindSym(Vec<String>, Action),
 	FloatingMod(String),
@@ -46,13 +46,13 @@ impl<'a> Variables<'a> {
       variables: HashMap::new(),
     }
   }
+
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<&'a str>) -> Config {
+  pub fn set(&mut self, v: String, s: Vec<&'a str>) {
     match self.variables.contains_key(&v) {
       true => panic!("Duplicate Variable! Variable: {} already exits!", v),
       false => {
         self.variables.insert(v, s);
-        Config::Set()
       }
     }
   }
@@ -61,7 +61,7 @@ impl<'a> Variables<'a> {
   pub fn get(&'a self, k: &str) -> Vec<&'a str> {
     match self.variables.get(k) {
       Some(s) => {
-        *s
+        s.to_owned()
       },
       None => panic!("Variable: {} not found!", k),
     }

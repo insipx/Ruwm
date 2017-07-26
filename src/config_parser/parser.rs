@@ -4,7 +4,9 @@
 
 use config_parser::*;
 
+#[allow(dead_code)]
 pub mod config_grammar {
+
 	include!(concat!(env!("OUT_DIR"), "/config_grammar.rs"));
 }
 
@@ -41,13 +43,9 @@ exec --no-startup-id 'nm-applet'
 
 set $left h
 
-", &mut variables){
+"){
 		Ok(r) => println!("Parsed as: {:?}", r),
 		Err(e) => println!("Parse error: {}", e),
 	};
 
-  match config_grammar::get_single_s_from_var("$ws0", &mut variables) {
-    Ok(r) => println!("parsed as: {:?}", r),
-    Err(e) => println!("Parse error: {}", e),
-  }
 }
