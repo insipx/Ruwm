@@ -2,7 +2,6 @@ use ruwm::xcb;
 use ruwm::scancode;
 use ruwm::err::RuwmError;
 
-use std::process::Command;
 use self::xcb::ffi::base::xcb_generic_event_t as xcb_generic_event_t;
 
 pub struct Handlers;
@@ -10,7 +9,7 @@ pub struct Handlers;
  * Handlers for different X events.
  * Comments/Structure Shamelessly copied from i3, and modified to fit ruwm
  */
-
+#[allow(dead_code)]
 impl Handlers {
 
   /*

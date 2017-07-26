@@ -6,7 +6,7 @@ build = "src/build.rs"
 
 [dependencies]
 xcb = "0.7.6"
-xkb = "0.1.2"
+xkbcommon = "0.2"
 scancode = "0.1.2"
 colored = "1.5.2"
 

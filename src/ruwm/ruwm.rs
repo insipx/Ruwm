@@ -1,5 +1,4 @@
 use ruwm::xcb;
-use std::process;
 
 use ruwm::err::RuwmError;
 use ruwm::handlers::Handlers;
@@ -11,6 +10,9 @@ use ruwm::config::NET_ATOM_NAME as NET_ATOM_NAME;
 use self::xcb::ffi::xproto::xcb_atom_t as xcb_atom_t;
 
 // Handles setup and the event loop (running)
+// turning on dead code for now to get rid of
+// huge amount of warnings
+#[allow(dead_code)]
 pub struct Ruwm {
   width: u16,
   height: u16,
