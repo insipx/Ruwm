@@ -12,12 +12,15 @@ use ruwm::ruwm::Ruwm;
  */
 
 fn main() {
-    // argparser goes here
-    // handles passing configuration to Ruwm Struct
-    // Starts IPC
+  // argparser goes here
+  // handles passing configuration to Ruwm Struct
+  // Starts IPC
 
-    let ruwm = Ruwm::new().unwrap();
-    ruwm.run();
+  let ruwm = Ruwm::new().unwrap();
+  match ruwm.run() {
+    Ok(s) => println!("Exit Success!"),
+    Err(e) => println!("{}", e.to_string())
+  }
 }
 
 

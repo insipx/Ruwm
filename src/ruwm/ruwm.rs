@@ -1,6 +1,6 @@
 use ruwm::xcb;
 
-use ruwm::err::RuwmError;
+use ruwm::err::*;
 use ruwm::handlers::Handlers;
 use ruwm::utils::Utils;
 use ruwm::config::WM_ATOM_NAME as WM_ATOM_NAME; 
@@ -34,16 +34,8 @@ impl Ruwm {
     let mut netatoms : Vec<xcb_atom_t> = Vec::new();
 
     // make a connection to the X server
-    let (connection, screen_num) = match xcb::Connection::connect(None) {
-      Ok(c) => c,
-      Err(e) => RuwmError::CouldNotConnect(e).handle(),
-    };
-
-    // setup roots, width and height
-    let setup = match Self::setup(&connection, screen_num) {
-      Ok(s) => s,
-      Err(e) => e.handle(),
-    };
+    let (connection, screen_num) = xcb::Connection::connect(None)?;
+    let setup = Self::setup(&connection, screen_num)?; 
 
     println!("Screen Num: {}", screen_num);
     Utils::get_atoms(WM_ATOM_NAME.to_vec(), &mut wmatoms, &connection);
@@ -69,11 +61,15 @@ impl Ruwm {
     if let Some(screen) = setup.roots().nth(screen_num as usize) {
       Ok((screen.width_in_pixels(), screen.height_in_pixels(), screen.root()))
     } else {
-      Err(RuwmError::CouldNotAcquireScreen)
+      Err(RuwmError::CouldNotAcquireScreen {side: CouldNotAcquireScreenError })
     }
   }
-
-  pub fn run(&self) { 
+  /*
+   * Run the main event loop
+   * Returns nothing on success, RuwmError if there is something 
+   * that went wrong
+   */
+  pub fn run(&self) -> Result<(), RuwmError> { 
     let events = [(
       xcb::CW_EVENT_MASK,
       xcb::EVENT_MASK_BUTTON_PRESS | xcb::EVENT_MASK_BUTTON_RELEASE |
@@ -93,25 +89,28 @@ impl Ruwm {
       let event = self.connection.wait_for_event();
       match event {
         Some(e) => {
-          let result = match e.response_type() {
-            xcb::BUTTON_PRESS => Handlers::handle_button_press(e),
-            xcb::BUTTON_RELEASE => Handlers::handle_button_release(e),
-            xcb::KEY_PRESS => Handlers::handle_key_press(e), 
-            xcb::EXPOSE => Handlers::handle_expose(e),
-            xcb::MAP_REQUEST => Handlers::handle_map_request(e),
-            _ => {
-              println!("Received some event: {}", e.response_type());
-              Ok(false)
-            }
-          };
-          match result {
-            Ok(r) => { if r { break 'event_loop; } },
-            Err(e) => { e.handle() }
+          if self.match_event(e)? {
+            break 'event_loop;
           }
         },
         None => { }
       };
     }
     println!("Exiting!");
+    Ok(())
+  }
+
+  fn match_event(&self, event: xcb::base::GenericEvent) -> Result<bool, RuwmError> {
+    return match event.response_type() {
+      xcb::BUTTON_PRESS => Handlers::handle_button_press(event),
+      xcb::BUTTON_RELEASE => Handlers::handle_button_release(event),
+      xcb::KEY_PRESS => Handlers::handle_key_press(event), 
+      xcb::EXPOSE => Handlers::handle_expose(event),
+      xcb::MAP_REQUEST => Handlers::handle_map_request(event),
+      _ => {
+        println!("Received some event: {}", event.response_type());
+        Ok(false)
+      }
+    }
   }
 }

@@ -1,3 +1,8 @@
+use std::io;
+use std::io::prelude::*;
+use std::fs::File;
+
+use self::err::ConfigError;
 /* includes the generated code from PEG 
 	- ${PROJECT_DIR}/targetbuild/ruwm-*out/
 */
@@ -6,15 +11,47 @@ use config_parser::*;
 
 #[allow(dead_code)]
 pub mod config_grammar {
-
 	include!(concat!(env!("OUT_DIR"), "/config_grammar.rs"));
 }
 
+pub struct Parser<'a> {
+  variables: Variables<'a>,
+  config: Vec<Config>,
+}
+
+impl<'a> Parser<'a> {
+
+  pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
+    let mut f = File::open(config_file)?;
+    let mut config = String::new();
+    f.read_to_string(&mut config);
+
+    Ok(Parser {
+      variables: Variables::new(),
+      config: match config_grammar::content(&config) {
+        Ok(c) => c,
+        Err(e) => panic!("Could not parse config"),
+      },
+    })
+  }
+
+  pub fn parse(&mut self) {
+    unimplemented!();
+  }
+
+  /*
+   * Put variables (anything starting with $) in a hashmap
+   */
+  fn intern_variables() {
+    unimplemented!();
+  }
+}
+
+
+
 #[cfg(test)]
 #[test]
-fn test_parser() {
-
-  let mut variables = Variables::new();
+fn test_grammar() {
   // TODO
   // the fact that the first line must be at the very beginning
   // is not a very big deal, since we can just strip all whitespace until
@@ -48,4 +85,10 @@ set $left h
 		Err(e) => println!("Parse error: {}", e),
 	};
 
+}
+
+#[cfg(test)]
+#[test]
+fn test_parser() {
+  println!("Test for the Parser Struct and functions go here");
 }
