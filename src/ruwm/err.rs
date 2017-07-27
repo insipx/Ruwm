@@ -53,7 +53,7 @@ impl fmt::Display for RuwmError {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match *self {
 			RuwmError::CouldNotConnect(ref err) => write!(f, "Could Not Connect Error {}", err),
-			RuwmError::CouldNotAcquireScreen{ side } => write!(f, "Could Not Acquire a screen from the X Server"),
+			RuwmError::CouldNotAcquireScreen(ref err) => write!(f, "Could Not Acquire a screen from the X Server {}", err),
 			RuwmError::CouldNotRegisterAtom(ref err) => write!(f, "Could Not Register Atom {}", err),
 		}
 	}

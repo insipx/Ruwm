@@ -4,7 +4,7 @@ use std::io;
 use std::error; 
 use std::fmt;
 
-use self::peg::ParseError;
+use self::peg::grammar::ParseError;
 
 use config_parser::colored::Colorize;
 
@@ -13,15 +13,15 @@ use config_parser::colored::Colorize;
  * for err.rs
  *
  */
+// v = variable
+#[derive(Debug)]
+struct VariableNotFound { v: String }
 
 #[derive(Debug)]
-struct VariableNotFound;
+struct DuplicateVariable { v: String }
 
 #[derive(Debug)]
-struct DuplicateVariable;
-
-#[derive(Debug)]
-struct MultipleSymbols;
+struct MultipleSymbols { v: String }
 
 pub type VariableNotFoundError = VariableNotFound;
 
@@ -75,12 +75,12 @@ pub enum ConfigError {
   // If the grammar fails
   CouldNotParseConfigFile(ParseError), 
   // If a duplicate variable is found in the config
-  FoundDuplicateVariable(DuplicateVariableError, String), // String is the variable
+  FoundDuplicateVariable(DuplicateVariableError), // String is the variable
   // If a variable is not found in config
-  VariableNotFound(VariableNotFoundError, String), // String is the variable
+  VariableNotFound(VariableNotFoundError), // String is the variable
   // If a variable is attached to more than one symbol,
   // when only one symbol is expected
-  MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError, String), // String is the variable
+  MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError), // String is the variable
 }
 
 

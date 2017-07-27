@@ -61,7 +61,7 @@ impl Ruwm {
     if let Some(screen) = setup.roots().nth(screen_num as usize) {
       Ok((screen.width_in_pixels(), screen.height_in_pixels(), screen.root()))
     } else {
-      Err(RuwmError::CouldNotAcquireScreen(CouldNotAcquireScreenError))
+      Err(RuwmError::CouldNotAcquireScreen(CouldNotAcquireScreenError{}))
     }
   }
   /*

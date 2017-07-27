@@ -56,9 +56,10 @@ impl<'a> Variables<'a> {
   #[allow(dead_code)]
   pub fn set(&mut self, v: String, s: Vec<&'a str>) -> Result<(), ConfigError> {
     match self.variables.contains_key(&v) {
-      true => ConfigError::FoundDuplicateVariable(DuplicateVariableError, v),
+      true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v})),
       false => {
         self.variables.insert(v, s);
+        Ok(())
       }
     }
   }
@@ -67,26 +68,26 @@ impl<'a> Variables<'a> {
   pub fn get(&'a self, k: &str) -> Result<Vec<&'a str>, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
-        s.to_owned()
+        Ok(s.to_owned())
       },
-      None => ConfigError::VariableNotFound(VariableNotFoundError, String::from(k)),
+      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: String::from(k)} )),
     }
   }
 
   // if there should only be one symbol attached to a variable
   // IE for workspaces
   #[allow(dead_code)]
-  pub fn get_single(&'a self, k: &str) -> &'a str {
-    match self.variables.get(k) {
+  pub fn get_single(&'a self, k: &str) -> Result<&'a str, ConfigError> {
+    return match self.variables.get(k) {
       Some(s) => {
         println!("Called!: {}", s[0]);
         if s.len() > 1 {
-          ConfigError::MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError, String::from(k))
+          return Err(ConfigError::MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError {v: String::from(k)}));
         }
-        self.variables.get(k).unwrap()[0].as_ref()
+        Ok(s[0].as_ref())
       },
-      None => ConfigError::VariableNotFound(VariableNotFoundError, String::from(k)),
-    }
+      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: String::from(k)} )),
+    };
   }
 }
 
