@@ -9,6 +9,7 @@ xcb = {git = "https://github.com/rtbo/rust-xcb" }
 xkbcommon = "0.2"
 scancode = "0.1.2"
 colored = "1.5.2"
+peg = "0.5.4"
 
 [build-dependencies]
 peg = "0.5.4"

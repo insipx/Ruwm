@@ -11,17 +11,20 @@ use std::fmt;
 
 // there is no error for not acquiring a screen in the XCB Rust Library bindings
 // So I made one
+
 #[derive(Debug)]
-pub struct CouldNotAcquireScreenError;
+struct CouldNotAcquireScreen;
+
+pub type CouldNotAcquireScreenError = CouldNotAcquireScreen;
 
 impl fmt::Display for CouldNotAcquireScreenError {
-	fn fmt(&self, f: &mut fmt::Formatter)-> fmt::Result {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		write!(f, "Could Not Acquire Screen Error")
 	}
 }
 impl error::Error for CouldNotAcquireScreenError {
 	fn description(&self) -> &str {
-		"The Screen Could Not Be Found, is Taken by Another WM, or X Was not able to lock it down."
+		"The Screen Could Not Be Found, is Taken by Another WM, or X was not able to lock it down."
 	}
 }
 
@@ -31,7 +34,7 @@ pub enum RuwmError {
 	// Could not connect tothe X server
 	CouldNotConnect(base::ConnError),
 	// Could not acquire a scren from X server
-	CouldNotAcquireScreen { side: CouldNotAcquireScreenError },
+	CouldNotAcquireScreen(CouldNotAcquireScreenError),
 	// An atom used by the WM wasn't accepted by the X server
 	CouldNotRegisterAtom(base::GenericError),
 	// Another WM was running and ruwm couldn't start
@@ -60,7 +63,7 @@ impl error::Error for RuwmError {
 	fn description(&self) -> &str {
 		match *self {
 			RuwmError::CouldNotConnect(ref err) => err.description(),
-			RuwmError::CouldNotAcquireScreen { side } => &self.to_string(), // Does not have an error type
+			RuwmError::CouldNotAcquireScreen(ref err ) => err.description(), // Does not have an error type
 			RuwmError::CouldNotRegisterAtom(ref err) => err.description(), // this might be a really bad error message
 		}
 	}
@@ -68,7 +71,7 @@ impl error::Error for RuwmError {
 	fn cause(&self) -> Option<&error::Error> {
 		match *self {
 			RuwmError::CouldNotConnect(ref err) => Some(err),
-			RuwmError::CouldNotAcquireScreen { side } => Some(&side),
+			RuwmError::CouldNotAcquireScreen(ref err) => Some(err),
 			RuwmError::CouldNotRegisterAtom(ref err) => Some(err),
 		}
 	}
@@ -83,8 +86,8 @@ impl From<base::ConnError> for RuwmError {
 }
 
 impl From<CouldNotAcquireScreenError> for RuwmError {
-	fn from(err: CouldNotAcquireScreenError) -> RuwmError {
-		RuwmError::CouldNotAcquireScreen { side: err }
+	fn from(err: CouldNotAcquireScreenError ) -> RuwmError {
+		RuwmError::CouldNotAcquireScreen(err)
 	}
 }
 

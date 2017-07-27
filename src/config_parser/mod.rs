@@ -4,6 +4,7 @@ pub mod parser;
 pub mod err;
 
 use std::collections::HashMap;
+use self::err::*;
 
 type Direction = String;
 
@@ -53,9 +54,9 @@ impl<'a> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<&'a str>) {
+  pub fn set(&mut self, v: String, s: Vec<&'a str>) -> Result<(), ConfigError> {
     match self.variables.contains_key(&v) {
-      true => panic!("Duplicate Variable! Variable: {} already exits!", v),
+      true => ConfigError::FoundDuplicateVariable(DuplicateVariableError, v),
       false => {
         self.variables.insert(v, s);
       }
@@ -63,14 +64,13 @@ impl<'a> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn get(&'a self, k: &str) -> Vec<&'a str> {
+  pub fn get(&'a self, k: &str) -> Result<Vec<&'a str>, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
         s.to_owned()
       },
-      None => panic!("Variable: {} not found!", k),
+      None => ConfigError::VariableNotFound(VariableNotFoundError, String::from(k)),
     }
-
   }
 
   // if there should only be one symbol attached to a variable
@@ -81,12 +81,12 @@ impl<'a> Variables<'a> {
       Some(s) => {
         println!("Called!: {}", s[0]);
         if s.len() > 1 {
-          panic!("More than one symbol attached to this variable!: {}", k);
+          ConfigError::MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError, String::from(k))
         }
         self.variables.get(k).unwrap()[0].as_ref()
       },
-      None => panic!("Variable: {} not found!", k),
+      None => ConfigError::VariableNotFound(VariableNotFoundError, String::from(k)),
     }
-}
+  }
 }
 

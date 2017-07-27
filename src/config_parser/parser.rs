@@ -28,10 +28,7 @@ impl<'a> Parser<'a> {
 
     Ok(Parser {
       variables: Variables::new(),
-      config: match config_grammar::content(&config) {
-        Ok(c) => c,
-        Err(e) => panic!("Could not parse config"),
-      },
+      config: config_grammar::content(&config)?,
     })
   }
 
