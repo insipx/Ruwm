@@ -1,11 +1,8 @@
-extern crate peg;
-
 use std::io;
 use std::error; 
 use std::fmt;
-
-use self::peg::grammar::ParseError;
-
+// Our grammar generates a ParseError from peg! :-)
+use config_parser::parser::config_grammar::ParseError;
 use config_parser::colored::Colorize;
 
 /* 
@@ -15,13 +12,13 @@ use config_parser::colored::Colorize;
  */
 // v = variable
 #[derive(Debug)]
-struct VariableNotFound { v: String }
+pub struct VariableNotFound { pub v: String }
 
 #[derive(Debug)]
-struct DuplicateVariable { v: String }
+pub struct DuplicateVariable { pub v: String }
 
 #[derive(Debug)]
-struct MultipleSymbols { v: String }
+pub struct MultipleSymbols { pub v: String }
 
 pub type VariableNotFoundError = VariableNotFound;
 

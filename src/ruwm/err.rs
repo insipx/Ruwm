@@ -13,7 +13,7 @@ use std::fmt;
 // So I made one
 
 #[derive(Debug)]
-struct CouldNotAcquireScreen;
+pub struct CouldNotAcquireScreen;
 
 pub type CouldNotAcquireScreenError = CouldNotAcquireScreen;
 

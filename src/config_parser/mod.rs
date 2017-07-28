@@ -1,3 +1,4 @@
+#![feature(plugin)]
 extern crate colored;
 
 pub mod parser; 
@@ -45,6 +46,7 @@ pub struct Variables<'a> {
 }
 
 impl<'a> Variables<'a> {
+
   #[allow(dead_code)]
   pub fn new() -> Self {
 

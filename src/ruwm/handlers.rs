@@ -16,7 +16,7 @@ impl Handlers {
   * When a mouse button is pressed, this callback is called
   */
   pub fn handle_button_press(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
-    let button_press : &xcb::ButtonPressEvent = xcb::cast_event(&event);
+    let button_press : &xcb::ButtonPressEvent = unsafe {xcb::cast_event(&event) };
     println!("Button '{:X}' pressed", button_press.detail());
     Ok(false)
   } 
@@ -25,7 +25,7 @@ impl Handlers {
    * When a mouse button is released, this callback is called
    */ 
   pub fn handle_button_release(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
-    let button_release : &xcb::ButtonReleaseEvent = xcb::cast_event(&event);
+    let button_release : &xcb::ButtonReleaseEvent = unsafe {xcb::cast_event(&event) };
     println!("Button {:X} release", button_release.detail());
     Ok(false)
   }
@@ -36,7 +36,7 @@ impl Handlers {
   * that way, can just import it and do scancode::Scancode::Q.run()
   */
   pub fn handle_key_press(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
-    let key_press : &xcb::KeyPressEvent = xcb::cast_event(&event);
+    let key_press : &xcb::KeyPressEvent = unsafe { xcb::cast_event(&event) };
     let code = scancode::Scancode::new(key_press.detail()).unwrap();
     println!("Key '{}', Hex: '{:X}' pressed, scancode: {:?}", 
       key_press.detail(), key_press.detail(), code);
@@ -52,7 +52,7 @@ impl Handlers {
    * so let's handle it :->
    */
   pub fn handle_expose(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
-    let expose : &xcb::ExposeEvent = xcb::cast_event(&event);
+    let expose : &xcb::ExposeEvent = unsafe { xcb::cast_event(&event) };
     println!("Received Expose Event, {:X}", expose.window());
     Ok(false)
   }
@@ -88,7 +88,7 @@ impl Handlers {
    *
    */
   pub fn handle_map_request(event: xcb::Event<xcb_generic_event_t>) -> Result<bool, RuwmError> {
-    let map : &xcb::MapRequestEvent = xcb::cast_event(&event);
+    let map : &xcb::MapRequestEvent = unsafe { xcb::cast_event(&event) };
     println!("Map Request!: {:?} ", map.window());
     Ok(false)
   }
