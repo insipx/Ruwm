@@ -16,7 +16,7 @@ pub mod config_grammar {
 
 pub struct Parser<'a> {
   variables: Variables<'a>,
-  config: Vec<Config>,
+  config: Vec<Config<'a>>,
 }
 
 impl<'a> Parser<'a> {
@@ -25,15 +25,30 @@ impl<'a> Parser<'a> {
     let mut f = File::open(config_file)?;
     let mut config = String::new();
     f.read_to_string(&mut config);
+    let config: &'a str = &config.clone();
 
     Ok(Parser {
       variables: Variables::new(),
-      config: config_grammar::content(&config)?,
+      config: config_grammar::content(config.as_ref())?,
     })
   }
 
-  pub fn parse(&mut self) {
-    unimplemented!();
+  /*
+   * Parse configuration file, interning Variables, 
+   * and setting bindings where needed
+   *
+   */
+  pub fn parse(&mut self) -> Result<(), ConfigError> {
+    for x in self.config.iter() {
+      match *x {
+        Config::Set(v, ref s) => self.variables.set(v.to_string(), *s)?,
+        Config::Exec(ref a) => unimplemented!(),
+        Config::BindSym(ref s, ref a) => unimplemented!(),
+        Config::FloatingMod(s) => unimplemented!(),
+        _ => unimplemented!(),
+      };
+    }
+    Ok(())
   }
 
   /*

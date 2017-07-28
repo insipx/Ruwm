@@ -17,11 +17,11 @@ type Direction = String;
 
 #[derive(Debug)]
 #[allow(dead_code)]
-pub enum Config {
-	Set(String, Vec<String>), // variable -> Symbol
+pub enum Config<'a> {
+	Set(&'a str, Vec<&'a str>), // variable -> Symbol
 	Exec(Action),
-	BindSym(Vec<String>, Action),
-	FloatingMod(String),
+	BindSym(Vec<&'a str>, Action),
+	FloatingMod(&'a str),
   Comment()
 }
 
@@ -38,7 +38,7 @@ pub enum Action {
 }
 
 
-// we can just make the String a ref to the Vector of Symbols,
+// we can just mgake the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
 pub struct Variables<'a> {
   pub variables: HashMap<String, Vec<&'a str>>,
