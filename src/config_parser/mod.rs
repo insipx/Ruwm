@@ -1,4 +1,3 @@
-#![feature(plugin)]
 extern crate colored;
 
 pub mod parser; 
@@ -84,7 +83,7 @@ impl<'a> Variables<'a> {
       Some(s) => {
         println!("Called!: {}", s[0]);
         if s.len() > 1 {
-          return Err(ConfigError::MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError {v: String::from(k)}));
+          return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: String::from(k)}));
         }
         Ok(s[0].as_ref())
       },

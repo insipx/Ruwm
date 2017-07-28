@@ -3,7 +3,6 @@ use std::error;
 use std::fmt;
 // Our grammar generates a ParseError from peg! :-)
 use config_parser::parser::config_grammar::ParseError;
-use config_parser::colored::Colorize;
 
 /* 
  * Need to eventually impelement std::Error trait
@@ -77,7 +76,7 @@ pub enum ConfigError {
   VariableNotFound(VariableNotFoundError), // String is the variable
   // If a variable is attached to more than one symbol,
   // when only one symbol is expected
-  MoreThanOneSymbolAttachedToVariable(MultipleSymbolsError), // String is the variable
+  MultipleSymbols(MultipleSymbolsError), // String is the variable
 }
 
 
@@ -88,7 +87,7 @@ impl fmt::Display for ConfigError {
       ConfigError::CouldNotParseConfigFile(ref err) => write!(f, "Could Not Parse Config File {}", err),
       ConfigError::FoundDuplicateVariable(ref err) => write!(f, "Found Duplicate Variable {}", err),
       ConfigError::VariableNotFound(ref err) => write!(f, "Variable '{}' Not Found ", err),
-      ConfigError::MoreThanOneSymbolAttachedToVariable(ref err) => write!(f, "More Than One Symbol Attached to Variable '{}'", err),      
+      ConfigError::MultipleSymbols(ref err) => write!(f, "More Than One Symbol Attached to Variable '{}'", err),      
     }
   }
 }
@@ -100,7 +99,7 @@ impl error::Error for ConfigError {
       ConfigError::CouldNotParseConfigFile(ref err) => err.description(),
       ConfigError::FoundDuplicateVariable(ref err) => err.description(),
       ConfigError::VariableNotFound(ref err) => err.description(),
-      ConfigError::MoreThanOneSymbolAttachedToVariable(ref err) => err.description(), 
+      ConfigError::MultipleSymbols(ref err) => err.description(), 
     }
   }
 
@@ -110,7 +109,7 @@ impl error::Error for ConfigError {
       ConfigError::CouldNotParseConfigFile(ref err) => Some(err),
       ConfigError::FoundDuplicateVariable(ref err) => Some(err),
       ConfigError::VariableNotFound(ref err) => Some(err),
-      ConfigError::MoreThanOneSymbolAttachedToVariable(ref err) => Some(err) 
+      ConfigError::MultipleSymbols(ref err) => Some(err) 
     }
   }
 }
@@ -142,6 +141,6 @@ impl From<VariableNotFoundError> for ConfigError {
 
 impl From<MultipleSymbolsError> for ConfigError {
   fn from(err: MultipleSymbolsError) -> ConfigError {
-    ConfigError::MoreThanOneSymbolAttachedToVariable(err)
+    ConfigError::MultipleSymbols(err)
   }
 }
