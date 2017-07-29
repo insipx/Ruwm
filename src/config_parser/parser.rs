@@ -1,11 +1,14 @@
 use std::io;
 use std::io::prelude::*;
 use std::fs::File;
+use std::fmt;
 
 use self::err::ConfigError;
 /* includes the generated code from PEG 
 	- ${PROJECT_DIR}/targetbuild/ruwm-*out/
 */
+// TODO
+// This code need some major cleanup
 
 use config_parser::*;
 
@@ -14,48 +17,73 @@ pub mod config_grammar {
 	include!(concat!(env!("OUT_DIR"), "/config_grammar.rs"));
 }
 
+#[derive(Debug)]
 pub struct Parser<'a> {
   variables: Variables<'a>,
-  config: Vec<Config<'a>>,
+  bindSym:  Vec<Config<'a>>,
+  exec: Vec<Config<'a>>,
+  floatingMod: Vec<Config<'a>>,
+}
+
+impl<'a> fmt::Display for Parser<'a> {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "Variables: {:?}, \
+      bindSym: {:?}, \
+      exec: {:?}, \
+      floatingMod: {:?}", 
+      self.variables, self.bindSym, self.exec, self.floatingMod
+    )
+  }
 }
 
 impl<'a> Parser<'a> {
 
   pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
     let mut f = File::open(config_file)?;
-    let mut config = String::new();
-    f.read_to_string(&mut config);
-    let config: &'a str = &config.clone();
+/*    {
+      let mut test = String::new();
+      f.read_to_string(&mut test)?;
+      println!("CONFIG: {}", test);
+    }*/
 
+    let result = Self::parse(&mut f)?;
     Ok(Parser {
-      variables: Variables::new(),
-      config: config_grammar::content(config.as_ref())?,
+      variables: result.0,
+      bindSym: result.1,
+      exec: result.2,
+      floatingMod: result.3,
     })
   }
 
   /*
-   * Parse configuration file, interning Variables, 
-   * and setting bindings where needed
-   *
+   * Parse configuration file, interning Variables,
+   * and setting up the Parser Struct
    */
-  pub fn parse(&mut self) -> Result<(), ConfigError> {
-    for x in self.config.iter() {
+  fn parse(mut file: &mut File)
+  -> Result<(Variables<'a>, Vec<Config<'a>>, Vec<Config<'a>>, Vec<Config<'a>>), ConfigError> 
+  {
+    let mut config = String::new();
+    // println!("first config, empty: {}", config);
+    file.read_to_string(&mut config)?;
+    println!("Should not be empty: {}", config);
+    let config = config_grammar::content(config.as_ref())?;
+
+    // create data structs for each configuration type
+    let mut variables = Variables::new();
+    let mut bindSym = Vec::new();
+    let mut exec = Vec::new();
+    let mut floatingMod = Vec::new();
+
+    for x in config.iter() {
       match *x {
-        Config::Set(v, ref s) => self.variables.set(v.to_string(), *s)?,
-        Config::Exec(ref a) => unimplemented!(),
-        Config::BindSym(ref s, ref a) => unimplemented!(),
-        Config::FloatingMod(s) => unimplemented!(),
-        _ => unimplemented!(),
+        Config::Set(v, ref s) => variables.set(v.to_string(), s.to_owned())?,
+        Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
+        Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
+        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s)),
+        _ => {},
       };
     }
-    Ok(())
-  }
-
-  /*
-   * Put variables (anything starting with $) in a hashmap
-   */
-  fn intern_variables() {
-    unimplemented!();
+    Ok((variables, bindSym, exec, floatingMod))
   }
 }
 
@@ -102,5 +130,10 @@ set $left h
 #[cfg(test)]
 #[test]
 fn test_parser() {
-  println!("Test for the Parser Struct and functions go here");
+  let parser = match Parser::new("/home/insi/Projects/ruwm/src/config_parser/config.test") {
+    Ok(s) => s,
+    Err(e) => panic!("{}", e)
+  };
+
+  println!("Parser: {}", parser.to_string());
 }

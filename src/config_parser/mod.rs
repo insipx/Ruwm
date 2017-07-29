@@ -15,13 +15,13 @@ type Direction = String;
  * that is why this is all marked as allow(dead_code)
  */
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[allow(dead_code)]
-pub enum Config<'a> {
-	Set(&'a str, Vec<&'a str>), // variable -> Symbol
+pub enum Config {
+	Set(String, Vec<String>), // variable -> Symbol
 	Exec(Action),
-	BindSym(Vec<&'a str>, Action),
-	FloatingMod(&'a str),
+	BindSym(Vec<String>, Action),
+	FloatingMod(String),
   Comment()
 }
 
@@ -30,7 +30,7 @@ pub enum Config<'a> {
 * ie: exec --no-startup-id feh ~/.config/wallpaper.png
 */
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Action {
 	Exec(Option<Vec<String>>, String), // standalone
 	Workspace(String),
@@ -40,8 +40,9 @@ pub enum Action {
 
 // we can just mgake the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
+#[derive(Debug)]
 pub struct Variables<'a> {
-  pub variables: HashMap<String, Vec<&'a str>>,
+  pub variables: HashMap<String, Vec<String>>,
 }
 
 impl<'a> Variables<'a> {

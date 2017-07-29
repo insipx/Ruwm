@@ -8,18 +8,18 @@ end ->  ()
     = [ \n\\\t]*
 
 // Symbol/Action definitions
-symbol -> &'input str
-    = s:$([a-zA-Z0-9'":]+) { s }
+symbol -> String
+    = s:$([a-zA-Z0-9'":]+) { s.to_string() }
 
     /* Needs its own syntax tree to sort variables/symbols
  * and put them in the right order */
-symbols -> Vec<&'input str>
+symbols -> Vec<String>
     = (variable / symbol) ++ "+"
 
-variable -> &'input str
-    = v:$("$"[a-zA-Z0-9]+) { v }
+variable -> String
+    = v:$("$"[a-zA-Z0-9]+) { v.to_string() }
 
-variables -> Vec<&'input str>
+variables -> Vec<String>
     = variable ++ [+ ]
 
 // Action going to have to go down it's own syntax tree
@@ -28,7 +28,7 @@ variables -> Vec<&'input str>
 action -> super::Action
     = ( exec / workspace / focus )
 
-comment -> super::Config<'input>
+comment -> super::Config
     = "#" [^\n]* e:end { super::Config::Comment() }
 
 // keyword definitions
@@ -65,19 +65,19 @@ focus -> super::Action
 /* BindSym, all we care about is what symbols 
  * are associated with which actions
  */
-bindsym_combo -> super::Config<'input>
+bindsym_combo -> super::Config
     = k:bindsym " " s:symbols " " a:action e:end { super::Config::BindSym(s,a) }
 
-floating_mod_combo -> super::Config<'input>
+floating_mod_combo -> super::Config
     = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
-set_combo -> super::Config<'input>
+set_combo -> super::Config
     = k:set " " v:variable " " s:symbols e:end { super::Config::Set(v, s) }
 
-exec_combo -> super::Config<'input>
+exec_combo -> super::Config
     = k:exec e:end { super::Config::Exec(k) }
 
 // Element Definitions
 #[pub]
-content -> Vec<super::Config<'input>>
+content -> Vec<super::Config
     =  (comment / set_combo / bindsym_combo / floating_mod_combo / exec_combo )* 

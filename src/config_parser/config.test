@@ -1,1 +1,21 @@
 # Test Config File (Used in Unit Tests)
+
+set $super Ctrl+Mod4
+set $rand Shift+Mod3+5
+set $left Ctrl+h
+
+bindsym LeftGui+1 workspace 1
+bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
+
+
+bindsym RightGui+2 workspace 2 # another comment
+
+set $sw0 '0:emp'
+bindsym RightGui+3 workspace $ws0
+bindsym Hello+3 workspace 5
+
+bindsym $super+$left focus left
+ # this is a comment
+ 
+
+ 
