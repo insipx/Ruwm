@@ -20,9 +20,9 @@ pub mod config_grammar {
 #[derive(Debug)]
 pub struct Parser<'a> {
   variables: Variables<'a>,
-  bindSym:  Vec<Config<'a>>,
-  exec: Vec<Config<'a>>,
-  floatingMod: Vec<Config<'a>>,
+  bindSym:  Vec<Config>,
+  exec: Vec<Config>,
+  floatingMod: Vec<Config>,
 }
 
 impl<'a> fmt::Display for Parser<'a> {
@@ -60,7 +60,7 @@ impl<'a> Parser<'a> {
    * and setting up the Parser Struct
    */
   fn parse(mut file: &mut File)
-  -> Result<(Variables<'a>, Vec<Config<'a>>, Vec<Config<'a>>, Vec<Config<'a>>), ConfigError> 
+  -> Result<(Variables<'a>, Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
   {
     let mut config = String::new();
     // println!("first config, empty: {}", config);
@@ -76,10 +76,10 @@ impl<'a> Parser<'a> {
 
     for x in config.iter() {
       match *x {
-        Config::Set(v, ref s) => variables.set(v.to_string(), s.to_owned())?,
+        Config::Set(ref v, ref s) => variables.set(v.to_string(), s.to_owned().iter().map(|s| s: &'a String).collect())?,
         Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
         Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
-        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s)),
+        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned())),
         _ => {},
       };
     }

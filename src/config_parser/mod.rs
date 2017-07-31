@@ -14,7 +14,8 @@ type Direction = String;
  * these structs is generated, the compiler does not pick up on this
  * that is why this is all marked as allow(dead_code)
  */
-
+// just have to make sure to free the config struct
+// after the Variables struct
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
 pub enum Config {
@@ -42,7 +43,7 @@ pub enum Action {
 // it doesn't matter, as long as we can access those variables later.
 #[derive(Debug)]
 pub struct Variables<'a> {
-  pub variables: HashMap<String, Vec<String>>,
+  pub variables: HashMap<String, Vec<&'a str>>,
 }
 
 impl<'a> Variables<'a> {
@@ -56,11 +57,11 @@ impl<'a> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<&'a str>) -> Result<(), ConfigError> {
+  pub fn set(&mut self, v: String, s: Vec<&'a String>) -> Result<(), ConfigError> {
     match self.variables.contains_key(&v) {
       true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v})),
       false => {
-        self.variables.insert(v, s);
+        self.variables.insert(v, s.iter().map(|s| s as &'a str).collect());
         Ok(())
       }
     }

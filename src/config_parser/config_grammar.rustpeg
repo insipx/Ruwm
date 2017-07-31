@@ -79,5 +79,5 @@ exec_combo -> super::Config
 
 // Element Definitions
 #[pub]
-content -> Vec<super::Config
+content -> Vec<super::Config>
     =  (comment / set_combo / bindsym_combo / floating_mod_combo / exec_combo )* 
