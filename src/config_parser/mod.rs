@@ -42,11 +42,11 @@ pub enum Action {
 // we can just mgake the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
 #[derive(Debug, Clone)]
-pub struct Variables<'a> {
-  pub variables: HashMap<&'a String, &'a Vec<&'a str>>,
+pub struct Variables {
+  pub variables: HashMap<String, Vec<String>>,
 }
 
-impl<'a, 'b> Variables<'a> {
+impl Variables {
 
   #[allow(dead_code)]
   pub fn new() -> Self {
@@ -57,8 +57,8 @@ impl<'a, 'b> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn set(&'b mut self, v: &'a String, s: &'a Vec<&'a str>) -> Result<(), ConfigError> {
-    match self.variables.contains_key(v) {
+  pub fn set(&mut self, v: String, s: Vec<String>) -> Result<(), ConfigError> {
+    match self.variables.contains_key(&v) {
       true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v: v.to_string()})),
       false => {
         self.variables.insert(v, s);
@@ -68,10 +68,10 @@ impl<'a, 'b> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn get(&'a self, k: &String) -> Result<&Vec<&'a str>, ConfigError> {
+  pub fn get(&self, k: &String) -> Result<Vec<&str>, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
-        Ok(s)
+        Ok(s.iter().map(String::as_str).collect())
       },
       None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: k.to_string()} )),
     }
@@ -80,7 +80,7 @@ impl<'a, 'b> Variables<'a> {
   // if there should only be one symbol attached to a variable
   // IE for workspaces
   #[allow(dead_code)]
-  pub fn get_single(&'a self, k: &String) -> Result<&'a str, ConfigError> {
+  pub fn get_single(&self, k: &String) -> Result<&str, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
         println!("Called!: {}", s[0]);

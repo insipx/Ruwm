@@ -1,4 +1,3 @@
-#![feature(type_ascription)]
 mod ruwm;
 mod config_parser;
 

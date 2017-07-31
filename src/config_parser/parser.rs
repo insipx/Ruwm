@@ -18,14 +18,14 @@ pub mod config_grammar {
 }
 
 #[derive(Debug)]
-pub struct Parser<'a> {
-  variables: Variables<'a>,
+pub struct Parser {
+  variables: Variables,
   bindSym:  Vec<Config>,
   exec: Vec<Config>,
   floatingMod: Vec<Config>,
 }
 
-impl<'a> fmt::Display for Parser<'a> {
+impl fmt::Display for Parser {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
     write!(f, "Variables: {:?}, \
       bindSym: {:?}, \
@@ -39,9 +39,11 @@ impl<'a> fmt::Display for Parser<'a> {
   /*
    * Parse configuration file, interning Variables,
    * and setting up the Parser Struct
+   * and moving ownership of the parsed file from 
+   * the rust-peg library to my own structures
    */
-fn parse(mut file: &mut File, vars: &mut Variables)
-  -> Result<(Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
+fn parse(mut file: &mut File)
+  -> Result<(Variables, Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
 {
   let mut config = String::new();
   // println!("first config, empty: {}", config);
@@ -50,39 +52,34 @@ fn parse(mut file: &mut File, vars: &mut Variables)
   let config = config_grammar::content(config.as_ref())?;
 
   // create data structs for each configuration type
+  let mut vars = Variables::new();
   let mut bindSym = Vec::new();
   let mut exec = Vec::new();
   let mut floatingMod = Vec::new();
 
   for x in config.iter() {
     match *x {
-      // the reason config doesn't live long enough, is because it dies after the OK
-      // but here I am taking references to items *in* config (v and s). I need to make the Variables struct
-      // own these values rather than reference them, alike to how the Vecs own the values. 
-      // Then I pass the references from the Variables struct
-      // that makes more sense! :D
-      Config::Set(ref v, ref s) => vars.set(&v, &s.iter().map(|s| s.as_str()).collect())?,
+      Config::Set(ref v, ref s) => vars.set(v.to_owned(), s.to_owned())?,
       Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned()).clone()),
       Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned()).clone()),
       Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned()).clone()),
       _ => {},
     };
   }
-  Ok((bindSym, exec, floatingMod))
+  Ok((vars, bindSym, exec, floatingMod))
 }
 
-impl<'a> Parser<'a> {
+impl Parser {
 
-  pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
+  pub fn new(config_file: &str) -> Result<Parser, ConfigError>  {
     let mut f = File::open(config_file)?;
 
-    let mut variables = Variables::new();
-    let result = parse(&mut f, &mut variables)?;
+    let result = parse(&mut f)?;
     Ok(Parser {
-      variables,
-      bindSym: result.0,
-      exec: result.1,
-      floatingMod: result.2,
+      variables: result.0,
+      bindSym: result.1,
+      exec: result.2,
+      floatingMod: result.3,
     })
   }
 }
