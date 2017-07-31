@@ -2,6 +2,7 @@ use std::io;
 use std::io::prelude::*;
 use std::fs::File;
 use std::fmt;
+use std::env;
 
 use self::err::ConfigError;
 /* includes the generated code from PEG 
@@ -117,7 +118,7 @@ set $left h
 #[cfg(test)]
 #[test]
 fn test_parser() {
-  let parser = match Parser::new("/home/insi/Projects/ruwm/src/config_parser/config.test") {
+  let parser = match Parser::new("src/config_parser/config.test") {
     Ok(s) => s,
     Err(e) => panic!("{}", e)
   };
