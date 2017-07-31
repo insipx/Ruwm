@@ -83,7 +83,6 @@ impl Variables {
   pub fn get_single(&self, k: &String) -> Result<&str, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
-        println!("Called!: {}", s[0]);
         if s.len() > 1 {
           return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: k.clone()}));
         }

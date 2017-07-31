@@ -96,7 +96,6 @@ impl Ruwm {
         None => { }
       };
     }
-    println!("Exiting!");
     Ok(())
   }
 
