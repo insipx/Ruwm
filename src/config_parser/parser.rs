@@ -36,54 +36,54 @@ impl<'a> fmt::Display for Parser<'a> {
   }
 }
 
-impl<'a> Parser<'a> {
-
-  pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
-    let mut f = File::open(config_file)?;
-/*    {
-      let mut test = String::new();
-      f.read_to_string(&mut test)?;
-      println!("CONFIG: {}", test);
-    }*/
-
-    let result = Self::parse(&mut f)?;
-    Ok(Parser {
-      variables: result.0,
-      bindSym: result.1,
-      exec: result.2,
-      floatingMod: result.3,
-    })
-  }
-
   /*
    * Parse configuration file, interning Variables,
    * and setting up the Parser Struct
    */
-  fn parse(mut file: &mut File)
-  -> Result<(Variables<'a>, Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
-  {
-    let mut config = String::new();
-    // println!("first config, empty: {}", config);
-    file.read_to_string(&mut config)?;
-    println!("Should not be empty: {}", config);
-    let config = config_grammar::content(config.as_ref())?;
+fn parse(mut file: &mut File, vars: &mut Variables)
+  -> Result<(Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
+{
+  let mut config = String::new();
+  // println!("first config, empty: {}", config);
+  file.read_to_string(&mut config)?;
+  println!("Should not be empty: {}", config);
+  let config = config_grammar::content(config.as_ref())?;
 
-    // create data structs for each configuration type
+  // create data structs for each configuration type
+  let mut bindSym = Vec::new();
+  let mut exec = Vec::new();
+  let mut floatingMod = Vec::new();
+
+  for x in config.iter() {
+    match *x {
+      // the reason config doesn't live long enough, is because it dies after the OK
+      // but here I am taking references to items *in* config (v and s). I need to make the Variables struct
+      // own these values rather than reference them, alike to how the Vecs own the values. 
+      // Then I pass the references from the Variables struct
+      // that makes more sense! :D
+      Config::Set(ref v, ref s) => vars.set(&v, &s.iter().map(|s| s.as_str()).collect())?,
+      Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned()).clone()),
+      Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned()).clone()),
+      Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned()).clone()),
+      _ => {},
+    };
+  }
+  Ok((bindSym, exec, floatingMod))
+}
+
+impl<'a> Parser<'a> {
+
+  pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
+    let mut f = File::open(config_file)?;
+
     let mut variables = Variables::new();
-    let mut bindSym = Vec::new();
-    let mut exec = Vec::new();
-    let mut floatingMod = Vec::new();
-
-    for x in config.iter() {
-      match *x {
-        Config::Set(ref v, ref s) => variables.set(v.to_string(), s.to_owned().iter().map(|s| s: &'a String).collect())?,
-        Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
-        Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
-        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned())),
-        _ => {},
-      };
-    }
-    Ok((variables, bindSym, exec, floatingMod))
+    let result = parse(&mut f, &mut variables)?;
+    Ok(Parser {
+      variables,
+      bindSym: result.0,
+      exec: result.1,
+      floatingMod: result.2,
+    })
   }
 }
 

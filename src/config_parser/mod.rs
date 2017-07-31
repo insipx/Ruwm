@@ -41,12 +41,12 @@ pub enum Action {
 
 // we can just mgake the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Variables<'a> {
-  pub variables: HashMap<String, Vec<&'a str>>,
+  pub variables: HashMap<&'a String, &'a Vec<&'a str>>,
 }
 
-impl<'a> Variables<'a> {
+impl<'a, 'b> Variables<'a> {
 
   #[allow(dead_code)]
   pub fn new() -> Self {
@@ -57,40 +57,40 @@ impl<'a> Variables<'a> {
   }
 
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<&'a String>) -> Result<(), ConfigError> {
-    match self.variables.contains_key(&v) {
-      true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v})),
+  pub fn set(&'b mut self, v: &'a String, s: &'a Vec<&'a str>) -> Result<(), ConfigError> {
+    match self.variables.contains_key(v) {
+      true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v: v.to_string()})),
       false => {
-        self.variables.insert(v, s.iter().map(|s| s as &'a str).collect());
+        self.variables.insert(v, s);
         Ok(())
       }
     }
   }
 
   #[allow(dead_code)]
-  pub fn get(&'a self, k: &str) -> Result<Vec<&'a str>, ConfigError> {
+  pub fn get(&'a self, k: &String) -> Result<&Vec<&'a str>, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
-        Ok(s.to_owned())
+        Ok(s)
       },
-      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: String::from(k)} )),
+      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: k.to_string()} )),
     }
   }
 
   // if there should only be one symbol attached to a variable
   // IE for workspaces
   #[allow(dead_code)]
-  pub fn get_single(&'a self, k: &str) -> Result<&'a str, ConfigError> {
-    return match self.variables.get(k) {
+  pub fn get_single(&'a self, k: &String) -> Result<&'a str, ConfigError> {
+    match self.variables.get(k) {
       Some(s) => {
         println!("Called!: {}", s[0]);
         if s.len() > 1 {
-          return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: String::from(k)}));
+          return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: k.clone()}));
         }
         Ok(s[0].as_ref())
       },
-      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: String::from(k)} )),
-    };
+      None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: k.to_string()} )),
+    }
   }
 }
 
