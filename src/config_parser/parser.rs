@@ -37,54 +37,44 @@ impl fmt::Display for Parser {
 }
 
   /*
-   * Parse configuration file, interning Variables,
-   * and setting up the Parser Struct
-   * and moving ownership of the parsed file from 
-   * the rust-peg library to my own structures
+   * Set up the Parser Struct
+   * move ownership of the parsed file from 
+   * the rust-peg grammar (rust-peg) to my own structures
    */
-fn parse(mut file: &mut File)
-  -> Result<(Variables, Vec<Config>, Vec<Config>, Vec<Config>), ConfigError> 
-{
-  let mut config = String::new();
-  // println!("first config, empty: {}", config);
-  file.read_to_string(&mut config)?;
-  println!("Should not be empty: {}", config);
-  let config = config_grammar::content(config.as_ref())?;
-
-  // create data structs for each configuration type
-  let mut vars = Variables::new();
-  let mut bindSym = Vec::new();
-  let mut exec = Vec::new();
-  let mut floatingMod = Vec::new();
-
-  for x in config.iter() {
-    match *x {
-      Config::Set(ref v, ref s) => vars.set(v.to_owned(), s.to_owned())?,
-      Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned()).clone()),
-      Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned()).clone()),
-      Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned()).clone()),
-      _ => {},
-    };
-  }
-  Ok((vars, bindSym, exec, floatingMod))
-}
-
 impl Parser {
 
   pub fn new(config_file: &str) -> Result<Parser, ConfigError>  {
     let mut f = File::open(config_file)?;
 
-    let result = parse(&mut f)?;
+    let mut config = String::new();
+    f.read_to_string(&mut config)?;
+    let config = config_grammar::content(config.as_ref())?;
+
+    // create data structs for each configuration type
+    let mut variables = Variables::new();
+    let mut bindSym = Vec::new();
+    let mut exec = Vec::new();
+    let mut floatingMod = Vec::new();
+
+    for x in config.iter() {
+      match *x {
+        Config::Set(ref v, ref s) => variables.set(v.to_owned(), s.to_owned())?,
+        Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
+        Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
+        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned())),
+        _ => {},
+      };
+    }
+
+    // let result = parse(&mut f)?;
     Ok(Parser {
-      variables: result.0,
-      bindSym: result.1,
-      exec: result.2,
-      floatingMod: result.3,
+      variables,
+      bindSym,
+      exec,
+      floatingMod,
     })
   }
 }
-
-
 
 #[cfg(test)]
 #[test]
