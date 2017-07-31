@@ -1,11 +1,14 @@
 use std::io;
 use std::io::prelude::*;
 use std::fs::File;
+use std::fmt;
 
 use self::err::ConfigError;
 /* includes the generated code from PEG 
 	- ${PROJECT_DIR}/targetbuild/ruwm-*out/
 */
+// TODO
+// This code need some major cleanup
 
 use config_parser::*;
 
@@ -14,37 +17,64 @@ pub mod config_grammar {
 	include!(concat!(env!("OUT_DIR"), "/config_grammar.rs"));
 }
 
-pub struct Parser<'a> {
-  variables: Variables<'a>,
-  config: Vec<Config>,
+#[derive(Debug)]
+pub struct Parser {
+  variables: Variables,
+  bindSym:  Vec<Config>,
+  exec: Vec<Config>,
+  floatingMod: Vec<Config>,
 }
 
-impl<'a> Parser<'a> {
-
-  pub fn new(config_file: &'a str) -> Result<Parser, ConfigError>  {
-    let mut f = File::open(config_file)?;
-    let mut config = String::new();
-    f.read_to_string(&mut config);
-
-    Ok(Parser {
-      variables: Variables::new(),
-      config: config_grammar::content(&config)?,
-    })
+impl fmt::Display for Parser {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "Variables: {:?}, \
+      bindSym: {:?}, \
+      exec: {:?}, \
+      floatingMod: {:?}", 
+      self.variables, self.bindSym, self.exec, self.floatingMod
+    )
   }
-
-  pub fn parse(&mut self) {
-    unimplemented!();
-  }
+}
 
   /*
-   * Put variables (anything starting with $) in a hashmap
+   * Set up the Parser Struct
+   * move ownership of the parsed file from 
+   * the rust-peg grammar (rust-peg) to my own structures
    */
-  fn intern_variables() {
-    unimplemented!();
+impl Parser {
+
+  pub fn new(config_file: &str) -> Result<Parser, ConfigError>  {
+    let mut f = File::open(config_file)?;
+
+    let mut config = String::new();
+    f.read_to_string(&mut config)?;
+    let config = config_grammar::content(config.as_ref())?;
+
+    // create data structs for each configuration type
+    let mut variables = Variables::new();
+    let mut bindSym = Vec::new();
+    let mut exec = Vec::new();
+    let mut floatingMod = Vec::new();
+
+    for x in config.iter() {
+      match *x {
+        Config::Set(ref v, ref s) => variables.set(v.to_owned(), s.to_owned())?,
+        Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
+        Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
+        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned())),
+        _ => {},
+      };
+    }
+
+    // let result = parse(&mut f)?;
+    Ok(Parser {
+      variables,
+      bindSym,
+      exec,
+      floatingMod,
+    })
   }
 }
-
-
 
 #[cfg(test)]
 #[test]
@@ -87,5 +117,10 @@ set $left h
 #[cfg(test)]
 #[test]
 fn test_parser() {
-  println!("Test for the Parser Struct and functions go here");
+  let parser = match Parser::new("/home/insi/Projects/ruwm/src/config_parser/config.test") {
+    Ok(s) => s,
+    Err(e) => panic!("{}", e)
+  };
+
+  println!("Parser: {}", parser.to_string());
 }

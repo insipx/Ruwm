@@ -10,7 +10,8 @@ end ->  ()
 // Symbol/Action definitions
 symbol -> String
     = s:$([a-zA-Z0-9'":]+) { s.to_string() }
-/* Needs its own syntax tree to sort variables/symbols
+
+    /* Needs its own syntax tree to sort variables/symbols
  * and put them in the right order */
 symbols -> Vec<String>
     = (variable / symbol) ++ "+"
@@ -73,7 +74,7 @@ floating_mod_combo -> super::Config
 set_combo -> super::Config
     = k:set " " v:variable " " s:symbols e:end { super::Config::Set(v, s) }
 
-exec_combo -> super::Config 
+exec_combo -> super::Config
     = k:exec e:end { super::Config::Exec(k) }
 
 // Element Definitions
