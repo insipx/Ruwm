@@ -1,8 +1,6 @@
-use std::io;
 use std::io::prelude::*;
 use std::fs::File;
 use std::fmt;
-use std::env;
 
 use self::err::ConfigError;
 /* includes the generated code from PEG 
@@ -21,29 +19,21 @@ pub mod config_grammar {
 #[derive(Debug)]
 pub struct Parser {
   variables: Variables,
-  bindSym:  Vec<Config>,
+  bind_sym:  Vec<Config>,
   exec: Vec<Config>,
-  floatingMod: Vec<Config>,
-}
-
-impl fmt::Display for Parser {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "Variables: {:?}, \
-      bindSym: {:?}, \
-      exec: {:?}, \
-      floatingMod: {:?}", 
-      self.variables, self.bindSym, self.exec, self.floatingMod
-    )
-  }
+  floating_mod: Vec<Config>,
 }
 
   /*
    * Set up the Parser Struct
    * move ownership of the parsed file from 
    * the rust-peg grammar (rust-peg) to my own structures
+   * Set Keybindings
+   * Handle Reloads
+   * 
    */
 impl Parser {
-
+  #[allow(dead_code)]
   pub fn new(config_file: &str) -> Result<Parser, ConfigError>  {
     let mut f = File::open(config_file)?;
 
@@ -53,16 +43,16 @@ impl Parser {
 
     // create data structs for each configuration type
     let mut variables = Variables::new();
-    let mut bindSym = Vec::new();
+    let mut bind_sym = Vec::new();
     let mut exec = Vec::new();
-    let mut floatingMod = Vec::new();
+    let mut floating_mod = Vec::new();
 
     for x in config.iter() {
       match *x {
         Config::Set(ref v, ref s) => variables.set(v.to_owned(), s.to_owned())?,
         Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
-        Config::BindSym(ref s, ref a) => bindSym.push(Config::BindSym(s.to_owned(),a.to_owned())),
-        Config::FloatingMod(ref s) => floatingMod.push(Config::FloatingMod(s.to_owned())),
+        Config::BindSym(ref s, ref a) => bind_sym.push(Config::BindSym(s.to_owned(),a.to_owned())),
+        Config::FloatingMod(ref s) => floating_mod.push(Config::FloatingMod(s.to_owned())),
         _ => {},
       };
     }
@@ -70,16 +60,42 @@ impl Parser {
     // let result = parse(&mut f)?;
     Ok(Parser {
       variables,
-      bindSym,
+      bind_sym,
       exec,
-      floatingMod,
+      floating_mod,
     })
+  }
+/*
+  pub fn get_bindings(&self) -> Vec<gT {
+  	unimplemented!();
+  }
+  */
+
+  pub fn get_exec() {
+  	unimplemented!();
+  }
+
+  pub fn get_floating_mod() {
+  	unimplemented!();
+  }
+}
+
+impl fmt::Display for Parser {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "\n
+    {:?}, \n
+	{:?}, \n
+    {:?}, \n
+    {:?}  \n", 
+      self.variables, self.bind_sym, self.exec, self.floating_mod
+    )
   }
 }
 
 #[cfg(test)]
 #[test]
 fn test_grammar() {
+	// banner for --nocapture
   // TODO
   // the fact that the first line must be at the very beginning
   // is not a very big deal, since we can just strip all whitespace until
@@ -118,10 +134,16 @@ set $left h
 #[cfg(test)]
 #[test]
 fn test_parser() {
+	// banner for --nocapture
   let parser = match Parser::new("src/config_parser/config.test") {
     Ok(s) => s,
     Err(e) => panic!("{}", e)
   };
 
+  println!("Test Get \n");
+  let longchain = parser.variables.get(&"$longchain".to_string());
+  println!("Long Chain: {:?}", longchain);
+  let long_ord_chain = parser.variables.get(&"$long_ordered_chain".to_string());
+  println!("Long Ordered Chain: {:?}", long_ord_chain);
   println!("Parser: {}", parser.to_string());
 }

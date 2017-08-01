@@ -4,18 +4,37 @@ set $super Ctrl+Mod4
 set $rand Shift+Mod3+5
 set $left Ctrl+h
 
+set $endchain l
+set $ele0 $endchain
+set $ele1 $ele0
+set $ele2 $ele1
+set $ele3 $ele2
+set $longchain $ele3 # testing setting variables to other variables
+
+# test to make sure the right order is returned on chained symbols
+set $end_ord_chain l+Mod3
+set $ele0_ord b+$end_ord_chain+f
+set $ele1_ord $ele0_ord+h
+set $ele2_ord a+$ele1_ord
+set $long_ordered_chain $ele2_ord+z
+# should come out to a b l Mod3 f h z
+
+
 bindsym LeftGui+1 workspace 1
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
 
 
 bindsym RightGui+2 workspace 2 # another comment
 
-set $sw0 '0:emp'
+set $ws0 '0:emp'
+set $ws1 "1:reb" # test double-quotes
+exec --no-startup-id 'feh --bg ~/.config/wallpaper.jpg'
+exec --no-startup-id "feh --bg ~/.config/wallpaper.png"
 bindsym RightGui+3 workspace $ws0
 bindsym Hello+3 workspace 5
 
 bindsym $super+$left focus left
  # this is a comment
- 
 
- 
+bindsym $longchain workspace $left
+

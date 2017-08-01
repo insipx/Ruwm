@@ -2,25 +2,39 @@ use super::*;
 
 /*
  * TODO Support for multiple variables
+ * allow variables to be used in other variable declarations
  */
 // as many spaces as we want, ended with a line-break
 end ->  () 
-    = [ \n\\\t]*
+    = [ \n\\\t\r]*
 
 // Symbol/Action definitions
-symbol -> String
-    = s:$([a-zA-Z0-9'":]+) { s.to_string() }
+symbol -> super::Value
+    = s:$([a-zA-Z0-9'":]+) { super::Value::Literal(s.to_string()) }
 
     /* Needs its own syntax tree to sort variables/symbols
  * and put them in the right order */
-symbols -> Vec<String>
+symbols -> Vec<super::Value>
     = (variable / symbol) ++ "+"
 
-variable -> String
-    = v:$("$"[a-zA-Z0-9]+) { v.to_string() }
+// same as variable but returns a string
+variable_string -> String
+    = v:$("$"[a-zA-Z0-9_-]+) { v.to_string() }
 
-variables -> Vec<String>
+variable -> super::Value
+    = v:$("$"[a-zA-Z0-9_-]+) { super::Value::VariableReference(v.to_string()) }
+
+variables -> Vec<super::Value>
     = variable ++ [+ ]
+
+// can only be a workspace number
+// and only one character long
+workspace_literal -> super::Value 
+    = l:$([0-9]*<1>){ super::Value::Literal(l.to_string()) }
+
+// left, right, up, down
+focus_literal -> super::Value 
+    = l:$([a-z]*<2,5>) { super::Value::Literal(l.to_string()) }
 
 // Action going to have to go down it's own syntax tree
 // EX: if an action is to be "exec"
@@ -29,7 +43,7 @@ action -> super::Action
     = ( exec / workspace / focus )
 
 comment -> super::Config
-    = "#" [^\n]* e:end { super::Config::Comment() }
+    = "#" [^\n\\\t\r]* e:end { super::Config::Comment() }
 
 // keyword definitions
 bindsym -> ()
@@ -51,14 +65,14 @@ exec_options -> Vec<String>
 // should split action arguments into vec
 // so that when spawning process, can do it without additional parsing
 exec -> super::Action
-    = "exec " o:(exec_options)? " "* ['"]a:$([a-zA-Z0-9\-$.\/ ]*)['"] { super::Action::Exec(o, a.to_string()) }
+    = "exec " o:(exec_options)? " "* ['"]a:$([^\n\r\\\t'"]*)['"] { super::Action::Exec(o, a.to_string()) }
 
 workspace -> super::Action
-    = "workspace " w:$(variable / [0-9]*<1>) { super::Action::Workspace(w.to_string()) }
+    = "workspace " w:(variable / workspace_literal) { super::Action::Workspace(w) }
 
 // d for direction
 focus -> super::Action
-    = "focus " d:$([a-z]*<2,5>) { super::Action::Focus(d.to_string())}
+    = "focus " d:(variable / focus_literal ) { super::Action::Focus(d)}
 
 // Combination Definitions
 
@@ -72,7 +86,7 @@ floating_mod_combo -> super::Config
     = k:floating_mod " " s:symbol e:end { super::Config::FloatingMod(s) }
 
 set_combo -> super::Config
-    = k:set " " v:variable " " s:symbols e:end { super::Config::Set(v, s) }
+    = k:set " " v:variable_string " " s:symbols e:end { super::Config::Set(v, s) }
 
 exec_combo -> super::Config
     = k:exec e:end { super::Config::Exec(k) }

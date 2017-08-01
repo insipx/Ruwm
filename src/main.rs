@@ -46,7 +46,7 @@ fn main() {
 
 fn run(ruwm: Ruwm) {
   match ruwm.run() {
-    Ok(s) => println!("{}", "Exit Success!".green()),
+    Ok(_) => println!("{}", "Exit Success!".green()),
     Err(e) => {
       println!("{}", e.description().red().bold());
       process::exit(1);

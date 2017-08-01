@@ -6,23 +6,36 @@ pub mod err;
 use std::collections::HashMap;
 use self::err::*;
 
-type Direction = String;
-
 /* 
  * For some reason, the rustc compiler thinks this is all dead code
  * probably since it's attached to the compiler, and the code that uses
  * these structs is generated, the compiler does not pick up on this
  * that is why this is all marked as allow(dead_code)
  */
+ #[derive(Debug, Clone)]
+pub enum Value {
+  Literal(String),
+  VariableReference(String),
+}
+
+impl Into<String> for Value {
+  fn into(self) -> String {
+    match self {
+      Value::Literal(s) => s,
+      Value::VariableReference(s) => s, 
+    }
+  }
+}
+
 // just have to make sure to free the config struct
 // after the Variables struct
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
 pub enum Config {
-	Set(String, Vec<String>), // variable -> Symbol
+	Set(String /* var name */, Vec<Value>), // variable -> Symbol
 	Exec(Action),
-	BindSym(Vec<String>, Action),
-	FloatingMod(String),
+	BindSym(Vec<Value>, Action),
+	FloatingMod(Value),
   Comment()
 }
 
@@ -34,8 +47,8 @@ pub enum Config {
 #[derive(Debug, Clone)]
 pub enum Action {
 	Exec(Option<Vec<String>>, String), // standalone
-	Workspace(String),
-	Focus(Direction)
+	Workspace(Value),
+	Focus(Value)
 }
 
 
@@ -43,7 +56,7 @@ pub enum Action {
 // it doesn't matter, as long as we can access those variables later.
 #[derive(Debug, Clone)]
 pub struct Variables {
-  pub variables: HashMap<String, Vec<String>>,
+  pub variables: HashMap<String, Vec<Value>>,
 }
 
 impl Variables {
@@ -57,10 +70,13 @@ impl Variables {
   }
 
   #[allow(dead_code)]
-  pub fn set(&mut self, v: String, s: Vec<String>) -> Result<(), ConfigError> {
+  pub fn set(&mut self, v: String, s: Vec<Value>) -> Result<(), ConfigError> {
     match self.variables.contains_key(&v) {
       true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v: v.to_string()})),
       false => {
+        // TODO this will make Variables in the Hashmap as Symbols
+        // need to fix that
+        // let s = s.into_iter().map(|s| s.into()).collect::<Vec<String>>();
         self.variables.insert(v, s);
         Ok(())
       }
@@ -68,10 +84,18 @@ impl Variables {
   }
 
   #[allow(dead_code)]
+  // useds recursion if a 'set' references another variable
   pub fn get(&self, k: &String) -> Result<Vec<&str>, ConfigError> {
     match self.variables.get(k) {
       Some(s) => {
-        Ok(s.iter().map(String::as_str).collect())
+        let mut result: Vec<&str> = Vec::new();
+        for v in s.iter() {
+          match *v {
+            Value::Literal(ref l) => result.push(l),
+            Value::VariableReference(ref r) => result.extend(self.get(r)?),
+          }
+        }
+        Ok(result)
       },
       None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: k.to_string()} )),
     }
@@ -86,7 +110,10 @@ impl Variables {
         if s.len() > 1 {
           return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: k.clone()}));
         }
-        Ok(s[0].as_ref())
+        match s[0] {
+          Value::Literal(ref l) => Ok(l),
+          Value::VariableReference(ref r) => self.get_single(r)
+        }
       },
       None => Err(ConfigError::VariableNotFound(VariableNotFoundError{ v: k.to_string()} )),
     }
