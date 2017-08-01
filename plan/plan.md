@@ -55,6 +55,8 @@ Future:
 - X Touch Support
 
 ## Learned
+- PEG grammar
+- Parsing, Advanced Rust Traits, better Functional habits
 - WTF is an Atom
 - grab_key
 - Substructure Redirection

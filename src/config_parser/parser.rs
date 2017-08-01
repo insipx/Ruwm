@@ -19,7 +19,7 @@ pub mod config_grammar {
 
 #[derive(Debug)]
 pub struct Parser {
-  variables: Variables,
+  vars: Variables,
   bind_sym:  Vec<Config>,
   exec: Vec<Config>,
   floating_mod: Vec<Config>,
@@ -43,14 +43,14 @@ impl Parser {
     let config = config_grammar::content(config.as_ref())?;
 
     // create data structs for each configuration type
-    let mut variables = Variables::new();
+    let mut vars = Variables::new();
     let mut bind_sym = Vec::new();
     let mut exec = Vec::new();
     let mut floating_mod = Vec::new();
 
     for x in config.iter() {
       match *x {
-        Config::Set(ref v, ref s) => variables.set(v.to_owned(), s.to_owned())?,
+        Config::Set(ref v, ref s) => vars.set(v.to_owned(), s.to_owned())?,
         Config::Exec(ref a) => exec.push(Config::Exec(a.to_owned())),
         Config::BindSym(ref s, ref a) => bind_sym.push(Config::BindSym(s.to_owned(),a.to_owned())),
         Config::FloatingMod(ref s) => floating_mod.push(Config::FloatingMod(s.to_owned())),
@@ -60,24 +60,11 @@ impl Parser {
 
     // let result = parse(&mut f)?;
     Ok(Parser {
-      variables,
+      vars,
       bind_sym,
       exec,
       floating_mod,
     })
-  }
-/*
-  pub fn get_bindings(&self) -> Vec<gT {
-  	unimplemented!();
-  }
-  */
-
-  pub fn get_exec() {
-  	unimplemented!();
-  }
-
-  pub fn get_floating_mod() {
-  	unimplemented!();
   }
 }
 
@@ -88,7 +75,7 @@ impl fmt::Display for Parser {
 	{:?}, \n
     {:?}, \n
     {:?}  \n", 
-      self.variables, self.bind_sym, self.exec, self.floating_mod
+      self.vars, self.bind_sym, self.exec, self.floating_mod
     )
   }
 }

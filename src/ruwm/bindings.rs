@@ -1,9 +1,8 @@
+use ruwm::xcb;
+use self::xcb::ffi::base::*;
 use ruwm::err::RuwmError;
 
-use ruwm::xcb;
-use std::collections::HashMap;
-use ruwm::scancode::Scancode;
-
+#[allow(dead_code)]
 enum InputType {
 	Keyboard,
 	Mouse,
@@ -21,6 +20,7 @@ impl InputType {
 * Taken from i3. Not sure if i need this,
 * Just testing out xkb
 */ 
+#[allow(dead_code)]
 pub struct Binding {
 	/*
 	 * The type of input this binding is for (InputType enum)
@@ -36,41 +36,30 @@ pub struct Binding {
 
 	/* Command, like in command mode */
 	// command: &str,
-
 }
 
+#[allow(dead_code)]
 impl Binding {
 	pub fn new() -> Result<Binding, RuwmError> {
 		unimplemented!();	
 	}
 }
 
-
-pub struct Bindings {
-	// Scancode/Scancode Combo => Action
-	// pub bindings: HashMap<Binding, Action>,
-}
+#[allow(dead_code)]
+pub struct Bindings;
 
 impl Bindings {
-	/*	
 	pub fn new() -> Result<Bindings, RuwmError> {
 		// get bindings
 		// configure bindings
 		// validate bindings
 		// return valid bindings
-		// For now, just return an empty hashmap
-		Ok (Bindings {
-			bindings: HashMap::new()
-		})
+		// For now, just return an empty struct
+		Ok (Bindings {})
 	}
-	*/
-	/*
-	 * Gets bindings from configuration file,
-	 * and stuffs them into a datastructure 
-	 * (Dictionary?)
-	 *
-	 */
-	pub fn get_bindings(config: &str) {
+
+	#[allow(dead_code)]
+	pub fn get_binding_from_xcb_event(event: xcb::Event<xcb_generic_event_t>) {
 		unimplemented!();
 	}
 

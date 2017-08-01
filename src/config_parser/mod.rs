@@ -44,7 +44,7 @@ impl Into<String> for Value {
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
 pub enum Config {
-	Set(String /* var name */, Vec<Value>), // variable -> Symbol
+	Set(String, Vec<Value>), // variable -> Symbol
 	Exec(Action),
 	BindSym(Vec<Value>, Action),
 	FloatingMod(Value),
