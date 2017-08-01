@@ -16,14 +16,11 @@ set $end_ord_chain l+Mod3
 set $ele0_ord b+$end_ord_chain+f
 set $ele1_ord $ele0_ord+h
 set $ele2_ord a+$ele1_ord
-set $ele2_ord $ele0
 set $long_ordered_chain $ele2_ord+z
 # should come out to a b l Mod3 f h z
 
-
 bindsym LeftGui+1 workspace 1
 bindsym $super+$rand exec 'termite --config $HOME/.config/termite/config'
-
 
 bindsym RightGui+2 workspace 2 # another comment
 

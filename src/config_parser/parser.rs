@@ -141,14 +141,19 @@ fn test_parser() {
     Err(e) => panic!("{}", e),
   };
 
-  println!("Test Get \n");
   match parser.variables.get(&"$longchain".to_string()) {
-  	Ok(s) => println!("Long Chain: {:?}", s),
+  	Ok(s) => {
+  		println!("Long Chain: {:?}", s);
+  		assert_eq!(s, vec!["l"]);
+  	},
   	Err(e) => panic!("{}", e),
   };
 
   match parser.variables.get(&"$long_ordered_chain".to_string()) {
-  	Ok(s) => println!("Long Ordered Chain: {:?}", s),
+  	Ok(s) => {
+  		println!("Long Ordered Chain: {:?}", s);
+  		assert_eq!(s, vec!["a", "b", "l", "Mod3", "f", "h", "z"]);
+  	},
   	Err(e) => panic!("{}", e),
   };
   println!("Parser: {}", parser.to_string());
