@@ -4,6 +4,9 @@ pub mod parser;
 pub mod err;
 
 use std::collections::HashMap;
+use std::fmt;
+use std::ops::Deref;
+
 use self::err::*;
 
 /* 
@@ -16,6 +19,15 @@ use self::err::*;
 pub enum Value {
   Literal(String),
   VariableReference(String),
+}
+
+impl fmt::Display for Value {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    match *self {
+      Value::Literal(ref s) => write!(f, "Literal: {}", s),
+      Value::VariableReference(ref s) => write!(f, "VariableReference: {}", s)
+    }
+  }
 }
 
 impl Into<String> for Value {
@@ -55,29 +67,31 @@ pub enum Action {
 // we can just mgake the String a ref to the Vector of Symbols,
 // it doesn't matter, as long as we can access those variables later.
 #[derive(Debug, Clone)]
-pub struct Variables {
-  pub variables: HashMap<String, Vec<Value>>,
+pub struct Variables(HashMap<String, Vec<Value>>);
+
+impl Deref for Variables {
+  type Target = HashMap<String, Vec<Value>>;
+  fn deref(&self) -> &HashMap<String, Vec<Value>> {
+    &self.0
+  }
 }
 
 impl Variables {
 
   #[allow(dead_code)]
   pub fn new() -> Self {
-
-    Variables {
-      variables: HashMap::new(),
-    }
+    Variables { 0: HashMap::new() }
   }
 
   #[allow(dead_code)]
   pub fn set(&mut self, v: String, s: Vec<Value>) -> Result<(), ConfigError> {
-    match self.variables.contains_key(&v) {
+    match self.0.contains_key(&v) {
       true => Err(ConfigError::FoundDuplicateVariable(DuplicateVariableError{v: v.to_string()})),
       false => {
         // TODO this will make Variables in the Hashmap as Symbols
         // need to fix that
         // let s = s.into_iter().map(|s| s.into()).collect::<Vec<String>>();
-        self.variables.insert(v, s);
+        self.0.insert(v, s);
         Ok(())
       }
     }
@@ -86,7 +100,7 @@ impl Variables {
   #[allow(dead_code)]
   // useds recursion if a 'set' references another variable
   pub fn get(&self, k: &String) -> Result<Vec<&str>, ConfigError> {
-    match self.variables.get(k) {
+    match self.0.get(k) {
       Some(s) => {
         let mut result: Vec<&str> = Vec::new();
         for v in s.iter() {
@@ -105,7 +119,7 @@ impl Variables {
   // IE for workspaces
   #[allow(dead_code)]
   pub fn get_single(&self, k: &String) -> Result<&str, ConfigError> {
-    match self.variables.get(k) {
+    match self.0.get(k) {
       Some(s) => {
         if s.len() > 1 {
           return Err(ConfigError::MultipleSymbols(MultipleSymbolsError {v: k.clone()}));

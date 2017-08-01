@@ -1,6 +1,7 @@
 use std::io::prelude::*;
 use std::fs::File;
 use std::fmt;
+use std::error::Error;
 
 use self::err::ConfigError;
 /* includes the generated code from PEG 
@@ -137,13 +138,18 @@ fn test_parser() {
 	// banner for --nocapture
   let parser = match Parser::new("src/config_parser/config.test") {
     Ok(s) => s,
-    Err(e) => panic!("{}", e)
+    Err(e) => panic!("{}", e),
   };
 
   println!("Test Get \n");
-  let longchain = parser.variables.get(&"$longchain".to_string());
-  println!("Long Chain: {:?}", longchain);
-  let long_ord_chain = parser.variables.get(&"$long_ordered_chain".to_string());
-  println!("Long Ordered Chain: {:?}", long_ord_chain);
+  match parser.variables.get(&"$longchain".to_string()) {
+  	Ok(s) => println!("Long Chain: {:?}", s),
+  	Err(e) => panic!("{}", e),
+  };
+
+  match parser.variables.get(&"$long_ordered_chain".to_string()) {
+  	Ok(s) => println!("Long Ordered Chain: {:?}", s),
+  	Err(e) => panic!("{}", e),
+  };
   println!("Parser: {}", parser.to_string());
 }

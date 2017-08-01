@@ -23,7 +23,7 @@ pub type VariableNotFoundError = VariableNotFound;
 
 impl fmt::Display for VariableNotFoundError {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "Variable Not Found") 
+    write!(f, "{}", self.v) 
   }
 }
 
@@ -36,7 +36,7 @@ impl error::Error for VariableNotFoundError {
 pub type DuplicateVariableError = DuplicateVariable;
 impl fmt::Display for DuplicateVariableError {
    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "Duplicate Variable") 
+    write!(f, "{}", self.v) 
   } 
 }
 
@@ -51,7 +51,7 @@ impl error::Error for DuplicateVariableError {
 pub type MultipleSymbolsError = MultipleSymbols;
 impl fmt::Display for MultipleSymbolsError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "More Than One Symbol") 
+    write!(f, "{}", self.v) 
   }
 }
 
@@ -85,7 +85,7 @@ impl fmt::Display for ConfigError {
     match *self {
       ConfigError::CouldNotOpenConfigFile(ref err) => write!(f, "Could Not Open Config File {}", err),
       ConfigError::CouldNotParseConfigFile(ref err) => write!(f, "Could Not Parse Config File {}", err),
-      ConfigError::FoundDuplicateVariable(ref err) => write!(f, "Found Duplicate Variable {}", err),
+      ConfigError::FoundDuplicateVariable(ref err) => write!(f, "Found Duplicate Variable: '{}'", err),
       ConfigError::VariableNotFound(ref err) => write!(f, "Variable '{}' Not Found ", err),
       ConfigError::MultipleSymbols(ref err) => write!(f, "More Than One Symbol Attached to Variable '{}'", err),      
     }
