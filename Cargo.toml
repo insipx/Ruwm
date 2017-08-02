@@ -5,8 +5,8 @@ authors = ["Andrew Plaza <aplaza@liquidthink.net>"]
 build = "src/build.rs"
 
 [dependencies]
-xcb = {git = "https://github.com/rtbo/rust-xcb", features = ["xkb"]}
-xkbcommon = { version = "0.3.0", features = ["x11"] }
+xcb = {version="0.8.0", features = ["xkb"]}
+xkbcommon = { git = "https://github.com/InsidiousMind/xkbcommon-rs", features = ["x11"] }
 scancode = "0.1.2"
 colored = "1.5.2"
 

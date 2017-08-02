@@ -41,25 +41,27 @@ pub struct Bindings;
 
 impl Bindings {
     #[allow(dead_code)]
-    pub fn new(conn: xcb::Connection) -> Result<Bindings, RuwmError> {
+    pub fn new(conn: &xcb::base::Connection) -> Result<Bindings, RuwmError> {
         // xkb_x11_setup_xkb_extension(conn, )
         // get bindings
         // configure bindings
         // validate bindings
         // return valid bindings
         // For now, just return an empty struct
-        let mut first_xkb_event: u8;
+        let mut first_xkb_event: u8 = 0;
         let mut null: u16 = 0;
-        /* xkb::x11::setup_xkb_extension(
-            &conn,
+        let mut null2: u16 = 0;
+        let mut null3: u8 = 0;
+        xkb::x11::setup_xkb_extension(
+            conn,
             xkb::x11::MIN_MAJOR_XKB_VERSION,
             xkb::x11::MIN_MINOR_XKB_VERSION,
             xkb::x11::SetupXkbExtensionFlags::NoFlags,
             &mut null,
-            &mut null,
+            &mut null2,
             &mut first_xkb_event,
-            &mut (null as u8),
-        );*/
+            &mut null3,
+        );
         Ok(Bindings {})
     }
 
