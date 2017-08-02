@@ -50,7 +50,7 @@ impl Bindings {
         // For now, just return an empty struct
         let mut first_xkb_event: u8;
         let mut null: u16 = 0;
-        xkb::x11::setup_xkb_extension(
+        /* xkb::x11::setup_xkb_extension(
             &conn,
             xkb::x11::MIN_MAJOR_XKB_VERSION,
             xkb::x11::MIN_MINOR_XKB_VERSION,
@@ -59,7 +59,7 @@ impl Bindings {
             &mut null,
             &mut first_xkb_event,
             &mut (null as u8),
-        );
+        );*/
         Ok(Bindings {})
     }
 
