@@ -3,3 +3,5 @@ ruwm.sublime-workspace
 Cargo.lock
 target/
 .*.sw*
+.idea/*
+*.iml
