@@ -1,4 +1,5 @@
-use ruwm::xcb::base;
+extern crate xcb;
+use self::xcb::base;
 use ruwm::colored::Colorize;
 use std::error;
 use std::fmt;
