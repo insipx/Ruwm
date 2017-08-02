@@ -1,8 +1,7 @@
-extern crate xcb;
 extern crate colored;
 extern crate scancode;
 extern crate xkbcommon;
-
+use xcb;
 pub mod ruwm;
 mod handlers;
 mod utils;

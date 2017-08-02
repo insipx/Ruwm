@@ -1,4 +1,5 @@
 extern crate colored;
+extern crate xcb;
 mod ruwm;
 mod config_parser;
 

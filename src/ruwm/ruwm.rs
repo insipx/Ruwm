@@ -1,5 +1,4 @@
-use ruwm::xcb;
-
+extern crate xcb;
 use ruwm::err::*;
 use ruwm::handlers::Handlers;
 use ruwm::utils::Utils;
