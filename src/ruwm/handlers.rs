@@ -1,4 +1,4 @@
-use ruwm::xcb;
+extern crate xcb;
 use ruwm::scancode;
 use ruwm::err::RuwmError;
 

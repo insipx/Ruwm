@@ -1,8 +1,8 @@
-use ruwm::xcb;
+use xcb;
 use ruwm::xkbcommon;
 use ruwm::xkbcommon::xkb;
 use std::ptr;
-use self::xcb::ffi::base::xcb_generic_event_t;
+use xcb::ffi::base::xcb_generic_event_t;
 
 use ruwm::err::RuwmError;
 #[allow(dead_code)]
@@ -41,7 +41,7 @@ pub struct Bindings;
 
 impl Bindings {
     #[allow(dead_code)]
-    pub fn new(conn: xcb::base::Connection) -> Result<Bindings, RuwmError> {
+    pub fn new(conn: xcb::Connection) -> Result<Bindings, RuwmError> {
         // xkb_x11_setup_xkb_extension(conn, )
         // get bindings
         // configure bindings
