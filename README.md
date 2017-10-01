@@ -12,3 +12,6 @@ A Window Manager Written in Rust
 - Easy Configuration file
   - created with a Parsing Expression Grammar
 
+
+
+TODO: 
